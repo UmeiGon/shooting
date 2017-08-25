@@ -1,0 +1,96 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="ソース ファイル">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="ヘッダー ファイル">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="リソース ファイル">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="ソース ファイル\program">
+      <UniqueIdentifier>{17a59edb-13f1-4c09-9e79-ee5b02423d5d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\program\scene">
+      <UniqueIdentifier>{9534f616-a47e-42aa-a1a4-eaf6aec89167}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="program\keycon.cpp">
+      <Filter>ソース ファイル\program</Filter>
+    </ClCompile>
+    <ClCompile Include="program\gamemain.cpp">
+      <Filter>ソース ファイル\program</Filter>
+    </ClCompile>
+    <ClCompile Include="program\vec3.cpp">
+      <Filter>ソース ファイル\program</Filter>
+    </ClCompile>
+    <ClCompile Include="program\TamaJet.cpp">
+      <Filter>ソース ファイル\program</Filter>
+    </ClCompile>
+    <ClCompile Include="program\debug.cpp">
+      <Filter>ソース ファイル\program</Filter>
+    </ClCompile>
+    <ClCompile Include="program\gameManager.cpp">
+      <Filter>ソース ファイル\program</Filter>
+    </ClCompile>
+    <ClCompile Include="program\jetManager.cpp">
+      <Filter>ソース ファイル\program</Filter>
+    </ClCompile>
+    <ClCompile Include="program\gameInit.cpp">
+      <Filter>ソース ファイル\program</Filter>
+    </ClCompile>
+    <ClCompile Include="program\scene\playScene.cpp">
+      <Filter>ソース ファイル\program\scene</Filter>
+    </ClCompile>
+    <ClCompile Include="program\scene\titleScene.cpp">
+      <Filter>ソース ファイル\program\scene</Filter>
+    </ClCompile>
+    <ClCompile Include="program\inputBox.cpp">
+      <Filter>ソース ファイル\program</Filter>
+    </ClCompile>
+    <ClCompile Include="program\cursor.cpp">
+      <Filter>ソース ファイル\program</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="program\keycon.h">
+      <Filter>ソース ファイル\program</Filter>
+    </ClInclude>
+    <ClInclude Include="program\vec3.h">
+      <Filter>ソース ファイル\program</Filter>
+    </ClInclude>
+    <ClInclude Include="program\TamaJet.h">
+      <Filter>ソース ファイル\program</Filter>
+    </ClInclude>
+    <ClInclude Include="program\debug.h">
+      <Filter>ソース ファイル\program</Filter>
+    </ClInclude>
+    <ClInclude Include="program\gameManager.h">
+      <Filter>ソース ファイル\program</Filter>
+    </ClInclude>
+    <ClInclude Include="program\jetManager.h">
+      <Filter>ソース ファイル\program</Filter>
+    </ClInclude>
+    <ClInclude Include="program\gameInit.h">
+      <Filter>ソース ファイル\program</Filter>
+    </ClInclude>
+    <ClInclude Include="program\scene\playScene.h">
+      <Filter>ソース ファイル\program\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="program\scene\titleScene.h">
+      <Filter>ソース ファイル\program\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="program\inputBox.h">
+      <Filter>ソース ファイル\program</Filter>
+    </ClInclude>
+    <ClInclude Include="program\cursor.h">
+      <Filter>ソース ファイル\program</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
