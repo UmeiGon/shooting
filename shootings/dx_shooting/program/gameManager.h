@@ -17,16 +17,21 @@ class playscene;
 class keymouseInput;
 class Debug;
 class Cursor;
+class titlescene;
+class resultscene;
 class GameManager {
 public:
 	Cursor *cursor;
 	playscene *scene_play;
+	titlescene *scene_title;
+	resultscene *scene_result;
 	keymouseInput *input;
 	Debug *debug;
+	void playInit();
+	void resultInit(int);
 	static GameManager* getInstance();
 	GameManager();
-	enum scene{initScene,titleScene,playScene,resultScene}gameScene;
+	enum scene{init,title,play,result}gameScene;
 	int winWidth;
 	int winHeight;
-	int img[10];
 };

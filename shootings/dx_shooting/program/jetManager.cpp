@@ -1,7 +1,9 @@
 #include "jetManager.h"
 #include "gameManager.h"
 #include "TamaJet.h"
-
+#include "debug.h"
+#include "Animation.h"
+#include "Dxlib.h"
 JetManager* JetManager::getInstance() {
 	static JetManager* instance = nullptr;
 	if (nullptr == instance) {
@@ -9,12 +11,39 @@ JetManager* JetManager::getInstance() {
 	}
 	return instance;
 }
+int JetManager::getGraphYsize(int img) {
+	int a, b;
+	GetGraphSize(img,&a,&b);
+	return b;
+}
 JetManager::JetManager() {
+	
+	memset(anims, 0, sizeof(anims));
 	memset(enemy, 0, sizeof(enemy));
 	memset(targetJet, 0, sizeof(targetJet));
 	player = nullptr;
 }
-
+void JetManager::animationUpdate() {
+	GameManager *gm = GameManager::getInstance();
+	for (int i = 0; i < MAX_ANIM_SUU; i++) {
+		if (anims[i]) {
+			anims[i]->timer += gm->debug->dTime;
+			if (anims[i]->img[(int)(anims[i]->timer / anims[i]->changeTime)] == 0) {
+				SAFE_DELETE(anims[i]);
+				continue;
+			}
+			DrawRotaGraph(anims[i]->pos.x, anims[i]->pos.y, 1.0, 0, anims[i]->img[(int)(anims[i]->timer /anims[i]->changeTime)], true);
+		}
+	}
+}
+void JetManager::animStart(t2k::vec3 Pos,int Img[]) {
+	for (int i = 0; i < MAX_ANIM_SUU;i++) {
+		if (!anims[i]) {
+			anims[i] = new Animation(Pos,Img);
+			break;
+		}
+	}
+}
 //”»’èonly
 void JetManager::inToTarget(Jet* target) {
 	for (int i = 0; i < MAX_TARGET_SUU; i++) {
@@ -29,7 +58,7 @@ void JetManager::clearTarget() {
 		targetJet[i] = nullptr;
 	}
 }
-void JetManager::test2(Jet* shooter) {
+void JetManager::damagesSyori(Jet* shooter) {
 	if (!shooter)return;
 	for (int s = 0; s < MAX_SHOT_SUU; s++) {
 		if (shooter->Shot[s]) {

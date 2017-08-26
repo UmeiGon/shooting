@@ -1,6 +1,7 @@
 #include "debug.h"
 #include "Dxlib.h"
 #include "gameManager.h"
+#include "cursor.h"
 Debug::Debug() {
 	preTime = 0;
 	dTime = 0.06f;
@@ -29,6 +30,6 @@ void Debug::update(bool showCommand) {
 		halfTimer = 0;
 	}
 	if (showCommand) {
-		DrawFormatString(0, 0, GetColor(255, 255, 255), "X=%d Y=%d,\nfps=%d,\ntime=%d,\ndtime=%f\nobj=%d\n", gm->cursor->mouseX, gm->mouseY, myfps, nowtime, dTime, objSuu);
+		DrawFormatString(0, 0, GetColor(255, 255, 255), "X=%d Y=%d,\nfps=%d,\ntime=%d,\ndtime=%f\nobj=%d\n", gm->cursor->mouseX, gm->cursor->mouseY, myfps, nowtime, dTime, objSuu);
 	}
 }
