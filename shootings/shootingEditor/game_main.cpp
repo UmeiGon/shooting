@@ -219,9 +219,9 @@ public:
 	DataButton(int px, int py) {
 		x = px;
 		y = py;
-		StartButton = new ClickInputFlame(x, y, 150, 80, "SAVE_DATA", 40, 40);
-		CreateButton = new ClickInputFlame(x + 5, y, 32, 32, "", 0, 0, img[0]);
-		DeleteButton = new ClickInputFlame(x + 5, y + 40, 32, 32, "", 0, 0, img[1]);
+		StartButton = new ClickBox(x, y, 150, 80, "SAVE_DATA", 40, 40);
+		CreateButton = new ClickBox(x + 5, y, 32, 32, "", 0, 0, img[0]);
+		DeleteButton = new ClickBox(x + 5, y + 40, 32, 32, "", 0, 0, img[1]);
 	}
 	~DataButton() {
 		SAFE_DELETE(StartButton);
@@ -230,12 +230,12 @@ public:
 	}
 	int x;
 	int y;
-	ClickInputFlame *StartButton;
-	ClickInputFlame *CreateButton;
-	ClickInputFlame *DeleteButton;
+	ClickBox *StartButton;
+	ClickBox *CreateButton;
+	ClickBox *DeleteButton;
 };
-ClickInputFlame *eCreButton;
-ClickInputFlame *eDelButton;
+ClickBox *eCreButton;
+ClickBox *eDelButton;
 DataButton *dButtons[30];
 //”ŽšƒL[‚ð‰Ÿ‚·‚Æ‚»‚Ì’l‚ª•Ô‚éŠÖ”
 int suutiNyuryoku() {
@@ -283,8 +283,8 @@ void enemyChoiceInit(int num) {
 	SecBox = new NumberInputFlame(300, 720, "ŽžŠÔ", 200, 100);
 	eNumBox = new NumberInputFlame(300, 820, "“G”Ô†", 200, 100, 99);
 	SecBox->num = &mapdatas[num]->sec;
-	eCreButton = new ClickInputFlame(700, 600, 32, 32, "", 0, 0, img[0]);
-	eDelButton = new ClickInputFlame(800, 700, 32, 32, "", 0, 0, img[1]);
+	eCreButton = new ClickBox(700, 600, 32, 32, "", 0, 0, img[0]);
+	eDelButton = new ClickBox(700, 700, 32, 32, "", 0, 0, img[1]);
 	mapnum = num;
 }
 int scene = 0;

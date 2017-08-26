@@ -7,11 +7,14 @@ Cursor* Cursor::getInstance() {
 	}
 	return instance;
 }
+void Cursor::graphInit() {
+	Image[def] = LoadGraph("../dx_shooting/images/defaultCursor.png");
+	Image[click] = LoadGraph("../dx_shooting/images/clickCursor.png");
+	Image[input] = LoadGraph("../dx_shooting/images/inputCursor.png");
+}
 void Cursor::cursorImageInit() {
-	cursorImage[def] = LoadGraph("../dx_shooting/images/defaultCursor.png");
-	cursorImage[click] = LoadGraph("../dx_shooting/images/clickCursor.png");
-	cursorImage[input] = LoadGraph("../dx_shooting/images/inputCursor.png");
+
 }
 void Cursor::cursorDraw() {
-	DrawRotaGraph(mouseX, mouseY, 1.5, 0, cursorImage[cNum], true);
+	DrawRotaGraph(mouseX, mouseY, 1.5, 0, Image[cNum], true);
 }

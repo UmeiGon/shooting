@@ -1,6 +1,8 @@
 #pragma once
+class ClickBox;
 class titlescene {
 public:
+	ClickBox *startButton;
 	titlescene();
-	void titleUpdate();
+	bool update();
 };

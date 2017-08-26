@@ -57,6 +57,12 @@
     <ClCompile Include="program\cursor.cpp">
       <Filter>ソース ファイル\program</Filter>
     </ClCompile>
+    <ClCompile Include="program\scene\resultScene.cpp">
+      <Filter>ソース ファイル\program\scene</Filter>
+    </ClCompile>
+    <ClCompile Include="program\Animation.cpp">
+      <Filter>ソース ファイル\program</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="program\keycon.h">
@@ -90,6 +96,12 @@
       <Filter>ソース ファイル\program</Filter>
     </ClInclude>
     <ClInclude Include="program\cursor.h">
+      <Filter>ソース ファイル\program</Filter>
+    </ClInclude>
+    <ClInclude Include="program\scene\resultScene.h">
+      <Filter>ソース ファイル\program\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="program\Animation.h">
       <Filter>ソース ファイル\program</Filter>
     </ClInclude>
   </ItemGroup>

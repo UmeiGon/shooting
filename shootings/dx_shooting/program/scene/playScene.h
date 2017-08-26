@@ -2,7 +2,8 @@
 class JetManager;
 class playscene {
 public:
+	enum result { FIGHTING, VICTORY, DEFEAT };
 	playscene();
-	void playUpdate();
+	int update();
 	JetManager* jm;
 };

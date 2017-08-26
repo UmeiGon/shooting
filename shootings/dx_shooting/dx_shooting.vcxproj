@@ -19,8 +19,10 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="program\Animation.cpp" />
     <ClCompile Include="program\cursor.cpp" />
     <ClCompile Include="program\inputBox.cpp" />
+    <ClCompile Include="program\scene\resultScene.cpp" />
     <ClCompile Include="program\scene\titleScene.cpp" />
     <ClCompile Include="program\debug.cpp" />
     <ClCompile Include="program\gameInit.cpp" />
@@ -33,6 +35,7 @@
     <ClCompile Include="program\vec3.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="program\Animation.h" />
     <ClInclude Include="program\cursor.h" />
     <ClInclude Include="program\debug.h" />
     <ClInclude Include="program\gameInit.h" />
@@ -41,6 +44,7 @@
     <ClInclude Include="program\jetManager.h" />
     <ClInclude Include="program\keycon.h" />
     <ClInclude Include="program\scene\playScene.h" />
+    <ClInclude Include="program\scene\resultScene.h" />
     <ClInclude Include="program\scene\titleScene.h" />
     <ClInclude Include="program\TamaJet.h" />
     <ClInclude Include="program\vec3.h" />

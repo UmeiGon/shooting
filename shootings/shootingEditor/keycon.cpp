@@ -2,7 +2,7 @@
 #include "keycon.h"
 
 keymouseInput* keymouseInput::getInstance() {
-	keymouseInput* instance = nullptr;
+	static keymouseInput* instance = nullptr;
 	if (instance == nullptr) {
 		instance = new keymouseInput;
 	}

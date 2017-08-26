@@ -2,7 +2,9 @@
 #include "math.h"
 #include "debug.h"
 #include "gameManager.h"
-Tama::Tama(float X, float Y, float Angle, float Size, int Col, float Spd, int gfx = -1) {
+#include "Dxlib.h"
+
+Tama::Tama(float X, float Y, float Angle, float Size, int Col, float Spd, int atk = 1, int gfx = -1) {
 	handle = gfx;
 	pos.x = X;
 	pos.y = Y;
@@ -10,16 +12,23 @@ Tama::Tama(float X, float Y, float Angle, float Size, int Col, float Spd, int gf
 	size = Size;
 	angle = Angle;
 	c = Col;
+	Attack = atk;
 	speed = Spd;
-	int g;
-	GetGraphSize(handle, &g, &g);
-	graphSize = size / g;
+	int gx;
+	int gy;
+	graphAngle = 0;
+	GetGraphSize(handle, &gx, &gy);
+	graphSize = size / gy;
 	gm = GameManager::getInstance();
+}
+void Tama::gAngleSet(float ang) {
+	graphAngle = ang;
 }
 Tama::Tama() {
 	gm = GameManager::getInstance();
 }
-bool Tama::maruHantei(Tama a,Tama b) {
+
+bool Tama::maruHantei(Tama a, Tama b) {
 	int base = a.pos.x - b.pos.x;
 	int height = a.pos.y - b.pos.y;
 	int rad = a.r + b.r;
@@ -38,7 +47,7 @@ void Tama::draw() {
 	Timer += gm->debug->dTime;
 
 	if (!(handle == -1)) {
-		DrawRotaGraphF(pos.x, pos.y, graphSize, angle, handle, TRUE);
+		DrawRotaGraphF(pos.x, pos.y, graphSize, angle+graphAngle, handle, TRUE);
 	}
 	else {
 		DrawCircle(pos.x, pos.y, r, c);
@@ -52,37 +61,49 @@ void Jet::drawHp(float startX, float startY, int Hp, int maxHp) {
 	DrawBox(startX, startY, startX + yoko, startY + tate, GetColor(255, 0, 0), true);
 	DrawBox(startX, startY, startX + H * yoko, startY + tate, GetColor(0, 255, 0), true);
 }
-void Jet::shotGen(int targetX, int targetY, int col, float spd) {
+//‰æ‘œ‚ð‚ÌŠp“x‚ð’²ß‚µ‚½‚¢Žž‚ÍimgAng‚ð•ÏXB
+void Jet::shotGen(int targetX, int targetY, int col, float spd, int atk, int size, int img,float imgAng) {
 	float xsa = (targetX - pos.x);
 	float ysa = (targetY - pos.y);
-	angle = atan2(ysa, xsa);
+	float fAng = atan2(ysa, xsa);
+	if (houdai) {
+		houdai->angle=fAng;
+	}
 	for (int i = 0; i < JetManager::MAX_SHOT_SUU; i++) {
 		if (Shot[i] == nullptr) {
-			Shot[i] = new Tama(pos.x, pos.y, angle, 16, col, spd);
+			Shot[i] = new Tama(pos.x, pos.y, fAng, size, col, spd, atk, img);
+			Shot[i]->gAngleSet(imgAng);
 			Timer = 0;
 			break;
 		}
 	}
 }
-Jet::Jet(float X, float Y, float Angle, float Size, float Spd, float Health, float As, int gfx = -1) {
-	handle = gfx;
-	pos.x = X;
-	pos.y = Y;
-	size = Size;
-	r = Size / 2;
-	angle = Angle;
-	speed = Spd;
+Tama::~Tama() {
+	gm = nullptr;
+}
+Jet::~Jet() {
+	SAFE_DELETE(houdai);
+	for (int i = 0; i < JetManager::MAX_SHOT_SUU&&Shot[i]; i++) {
+		SAFE_DELETE(Shot[i]);
+	}
+}
+void Jet::addHoudai(int plusX,int plusY,float ang,int img,float hsize,float gAng) {
+	houdai = new houData{plusX,plusY,ang,img,hsize,gAng};
+}
+Jet::Jet(float X, float Y, float Angle, float Size, float Spd, float Health, float As, int gfx):Tama(X, Y, Angle, Size,0xffffff,Spd,1,gfx) {
 	maxhealth = Health;
 	health = Health;
 	AttackSpeed = As;
-	int g;
-	GetGraphSize(handle, &g, &g);
-	graphSize = size / g;
 	memset(Shot, 0, sizeof(Shot));
+	houdai = nullptr;
 }
 void Jet::drawJet() {
 	gm->debug->objSuu++;
 	draw();
+	if (houdai) {
+		DrawRotaGraph(pos.x + houdai->x, pos.y + houdai->y, houdai->gSize, houdai->angle+houdai->gAngle, houdai->img, true);
+	}
+	
 	drawHp(pos.x - r, pos.y - r, health, maxhealth);
 }
 void Jet::drawMoveShot(int shotN) {
@@ -115,7 +136,7 @@ EnemyJet::EnemyJet(float X, float Y, float Angle, float Size, float Spd, float H
 	y0 = Y;
 }
 
-PlayerJet::PlayerJet(float X, float Y, float Angle, float Size, float Spd, float Health, float As, int gfx = -1) :Jet(X, Y, Angle, Size, Spd, Health, As, gfx) {}
+PlayerJet::PlayerJet(float X, float Y, float Angle, float Size, float Spd, float Health, float As, int gfx = -1) : Jet(X, Y, Angle, Size, Spd, Health, As, gfx) {}
 
 
 void PlayerJet::pMove() {
