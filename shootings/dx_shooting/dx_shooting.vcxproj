@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="program\Animation.cpp" />
+    <ClCompile Include="program\capsule.cpp" />
     <ClCompile Include="program\cursor.cpp" />
     <ClCompile Include="program\inputBox.cpp" />
     <ClCompile Include="program\scene\resultScene.cpp" />
@@ -36,6 +37,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="program\Animation.h" />
+    <ClInclude Include="program\capsule.h" />
     <ClInclude Include="program\cursor.h" />
     <ClInclude Include="program\debug.h" />
     <ClInclude Include="program\gameInit.h" />

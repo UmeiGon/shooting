@@ -7,6 +7,7 @@ Debug::Debug() {
 	dTime = 0.06f;
 	halfTimer = 0;
 	myfps = 0;
+	showDebug = false;
 }
 Debug* Debug::getInstance() {
 	static Debug* instance = nullptr;
@@ -15,7 +16,7 @@ Debug* Debug::getInstance() {
 	}
 	return instance;
 }
-void Debug::update(bool showCommand) {
+void Debug::update() {
 	GameManager* gm = GameManager::getInstance();
 	int nowtime = GetNowCount();
 	int satime;
@@ -29,7 +30,7 @@ void Debug::update(bool showCommand) {
 		myfps = 1000 / (satime);
 		halfTimer = 0;
 	}
-	if (showCommand) {
+	if (showDebug) {
 		DrawFormatString(0, 0, GetColor(255, 255, 255), "X=%d Y=%d,\nfps=%d,\ntime=%d,\ndtime=%f\nobj=%d\n", gm->cursor->mouseX, gm->cursor->mouseY, myfps, nowtime, dTime, objSuu);
 	}
 }

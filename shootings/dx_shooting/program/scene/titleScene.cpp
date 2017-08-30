@@ -1,17 +1,22 @@
 #include "Dxlib.h"
 #include "titleScene.h"
 #include "../inputBox.h"
-#include "../vec3.h"
+//#include "../gameManager.h"
+//#include "../capsule.h"
+//#include "../keycon.h"
 titlescene::titlescene() {
 	startButton = new ClickBox(400, 600, 150, 80, "Start");
 }
-typedef struct {
-	int x1; int y1; int x2; int y2;
-}line;
+//Capsule* cap1=nullptr;
+//Capsule* cap2=nullptr;
+//t2k::vec3 *point;
+//int r = 60;
 bool titlescene::update() {
-	line A{40,70,500,230};
-	line B{ 10,50,70,14 };
-	double len =
+	//if (!cap1) {
+	//	cap1 = new Capsule(t2k::vec3(90,40,0),t2k::vec3(69,222,0),40);
+	//	point = new t2k::vec3(600, 400, 0);
+	//}
+	//Capsule::testCap(cap1, new Capsule, point, r);
 	if (startButton->update()) {
 		return true;
 	}
