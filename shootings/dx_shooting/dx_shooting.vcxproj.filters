@@ -63,6 +63,9 @@
     <ClCompile Include="program\Animation.cpp">
       <Filter>ソース ファイル\program</Filter>
     </ClCompile>
+    <ClCompile Include="program\capsule.cpp">
+      <Filter>ソース ファイル\program</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="program\keycon.h">
@@ -102,6 +105,9 @@
       <Filter>ソース ファイル\program\scene</Filter>
     </ClInclude>
     <ClInclude Include="program\Animation.h">
+      <Filter>ソース ファイル\program</Filter>
+    </ClInclude>
+    <ClInclude Include="program\capsule.h">
       <Filter>ソース ファイル\program</Filter>
     </ClInclude>
   </ItemGroup>

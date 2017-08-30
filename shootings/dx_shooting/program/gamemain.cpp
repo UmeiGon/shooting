@@ -16,10 +16,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	JetManager *jm = JetManager::getInstance();
 	gameInit();
 	//–ˆƒtƒŒ[ƒ€ˆ—
-	bool debugsuitti = false;
 	while (ScreenFlip() == 0 && ProcessMessage() == 0 && ClearDrawScreen() == 0) {
 		gm->input->keyDownCheck();
 		gm->input->mouseDownCheck();
+		gm->debug->objSuu = 0;
 		GetMousePoint(&gm->cursor->mouseX, &gm->cursor->mouseY);
 		jm->animationUpdate();
 		switch (gm->gameScene)
@@ -56,8 +56,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		}
 
 		DrawRotaGraph(gm->cursor->mouseX, gm->cursor->mouseY, 1.0, 0, gm->cursor->Image[Cursor::def], true);
-		if (gm->input->isKeyDownTrigger(KEY_INPUT_F3))debugsuitti = !debugsuitti;
-		gm->debug->update(debugsuitti);
+		if (gm->input->isKeyDownTrigger(KEY_INPUT_F3))gm->debug->showDebug=!gm->debug->showDebug;
+		gm->debug->update();
 	}
 
 	DxLib_End();

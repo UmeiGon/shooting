@@ -1,7 +1,7 @@
 #pragma once
-#include "vec3.h"
 #include "jetManager.h"
 class GameManager;
+class Capsule;
 typedef struct {
 	int x;
 	int y;
@@ -10,26 +10,37 @@ typedef struct {
 	float gSize;
 	float gAngle = 0;
 }houData;
+class Maru {
+public:
+	t2k::vec3 pos;
+	int r;
+	Maru(t2k::vec3 Pos,int R);
+	Maru();
+};
 class Tama {
 public:
+	Capsule *capsule;
 	GameManager *gm;
 	float graphAngle;
 	int Attack = 1;
-	float Timer = 0;
+	float atkTimer = 0;
 	float speed;
-	t2k::vec3 pos;
-	float r;
+	Maru circle;
 	int handle = -1;
 	int c;
 	float angle;
 	float size = 1;
 	float graphSize;
+	Tama();
 	Tama(float X, float Y, float Angle, float Size, int Col, float Spd, int atk,int gfx);
-	static bool maruHantei(Tama a,Tama b);
+	static bool maruHantei(Maru a,Maru b);
+	static void LINE(t2k::vec3 a,t2k::vec3 b,int col);
 	bool screenInside(float px, float py, float sabun);
 	void gAngleSet(float ang);
+	void addCapsuleHantei(int nagasa);
+	
 	virtual ~Tama();
-	Tama();
+	
 	void draw();
 };
 
@@ -43,7 +54,11 @@ public:
 	int handle2;
 	int graphSize = 2;
 	float AttackSpeed = 1;
+	float liveTimer;
 	houData *houdai;
+	//生きていたらlive、スポーン前はtaiki、ライフ0で弾が画面にある場合dead、その後弾が無くなったらsyoukyo
+	enum zyoutai{TAIKI,LIVE,DEAD,SYOUKYO};
+	zyoutai stat=TAIKI;
 	Tama *Shot[JetManager::MAX_SHOT_SUU];
 	Jet(float X, float Y, float Angle, float Size, float Spd, float Health, float As, int gfx);
 	void drawJet();
@@ -57,10 +72,13 @@ class EnemyJet :public Jet {
 public:
 	float x0;
 	float y0;
+	float spawnTimer = 0;
 	float deathTimer = 0;
-	int moveType = 0;
-	EnemyJet(float X, float Y, float Angle, float Size, float Spd, float Health, float As, int gfx);
+	enum movetypes{MAWARU,NANAME,NAMI};
+	movetypes moveType = MAWARU;
+	EnemyJet(float X, float Y, float Angle, float Size, float Spd, float Health, float As, int gfx,float sT=0,float dT=20);
 	void eneMove();
+	void capTuizyu(t2k::vec3 Move);
 };
 class PlayerJet :public Jet {
 public:

@@ -4,6 +4,7 @@ class PlayerJet;
 class EnemyJet;
 class Jet;
 class Animation;
+class Tama;
 class JetManager {
 public:
 	static JetManager* getInstance();
@@ -16,6 +17,7 @@ public:
 	PlayerJet* player;
 	EnemyJet* enemy[MAX_ENEMY_SUU];
 	Jet* targetJet[MAX_TARGET_SUU];
+	bool hitHantei(Tama* a, Tama* b);
 	void animStart(t2k::vec3,int Img[]);
 	void animationUpdate();
 	void inToTarget(Jet* target);
