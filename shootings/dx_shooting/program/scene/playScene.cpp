@@ -15,13 +15,9 @@ int playscene::update() {
 	playTimer += gm->debug->dTime;
 	DrawFormatString(0, 900, 0xffffff, "%f", playTimer);
 
-	jm->player->pMove();
-	jm->player->drawJet();
+	jm->player->update();
 
-	//ƒNƒŠƒbƒN‚Å’e‚ðì‚éˆ—
-	if (GetMouseInput()&MOUSE_INPUT_LEFT&&jm->player->atkTimer >= jm->player->AttackSpeed) {
-		jm->player->shotGen(gm->cursor->mouseX, gm->cursor->mouseY, 0xffffff, 5, 2, 10, jm->gfx[JetManager::ZIKI_MISS]);
-	}
+	
 	//“G•`‰æ
 	int enemyCount = 0;
 	for (int s = 0; s < JetManager::MAX_ENEMY_SUU; s++) {
@@ -37,7 +33,7 @@ int playscene::update() {
 		if (jm->enemy[s]->stat == Jet::LIVE) {
 			//“G‚Ì’eì‚éB
 			if (jm->enemy[s]->AttackSpeed <= jm->enemy[s]->atkTimer) {
-				jm->enemy[s]->shotGen(jm->player->circle.pos.x, jm->player->circle.pos.y, GetColor(2, 200, 2), (float)(GetRand(9) + 3) / 3.0f, 1, 14, jm->gfx[JetManager::ENEMY_MISS], MY_PI);
+				jm->enemy[s]->shotGen(JetManager::SHOT_FIRE1,jm->player->circle.pos.x, jm->player->circle.pos.y);
 			}
 			/*if (jm->enemy[s]->deathTimer&& jm->enemy[s]->Timer >= jm->enemy[s]->deathTimer) {
 				SAFE_DELETE(jm->enemy[s]);

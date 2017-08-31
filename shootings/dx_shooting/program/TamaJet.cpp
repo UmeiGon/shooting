@@ -4,6 +4,8 @@
 #include "gameManager.h"
 #include "Dxlib.h"
 #include "capsule.h"
+#include "cursor.h"
+#include "keycon.h"
 Maru::Maru(t2k::vec3 Pos, int R) {
 	pos = Pos;
 	r = R;
@@ -25,7 +27,7 @@ Tama::Tama(float X, float Y, float Angle, float Size, int Col, float Spd, int at
 	gm = GameManager::getInstance();
 	capsule = nullptr;
 }
-void Tama::gAngleSet(float ang) {
+void Tama::gAngleTyosei(float ang) {
 	graphAngle = ang;
 }
 Tama::Tama() {
@@ -79,24 +81,41 @@ void Tama::draw() {
 	}
 }
 void Jet::drawHp(float startX, float startY, int Hp, int maxHp) {
-	float H = (float)Hp / (float)maxHp;
-	float tate = 5;
-	float yoko = 45;
-	DrawBox(startX, startY, startX + yoko, startY + tate, GetColor(255, 0, 0), true);
-	DrawBox(startX, startY, startX + H * yoko, startY + tate, GetColor(0, 255, 0), true);
+	gm->drawBar(startX, startY, 45, 5, Hp, maxHp, GetColor(255, 0, 0), GetColor(0, 255, 0));
 }
 //画像をの角度を調節したい時はimgAngを変更。
-void Jet::shotGen(int targetX, int targetY, int col, float spd, int atk, int size, int img, float imgAng) {
-	float xsa = (targetX - circle.pos.x);
-	float ysa = (targetY - circle.pos.y);
-	float fAng = atan2(ysa, xsa);
-	if (houdai) {
-		houdai->angle = fAng;
+void Jet::shotGen(JetManager::shottype s, int targetX, int targetY) {
+	float fAng=0;
+	JetManager* jm = JetManager::getInstance();
+	if (targetX != -1) {
+		float xsa = (targetX - circle.pos.x);
+		float ysa = (targetY - circle.pos.y);
+		fAng = atan2(ysa, xsa);
+		if (houdai) {
+			houdai->angle = fAng;
+		}
 	}
+
+
 	for (int i = 0; i < JetManager::MAX_SHOT_SUU; i++) {
-		if (Shot[i] == nullptr) {
-			Shot[i] = new Tama(circle.pos.x, circle.pos.y, fAng, size, col, spd, atk, img);
-			Shot[i]->gAngleSet(imgAng);
+		if (!Shot[i]) {
+			switch (s)
+			{
+			case JetManager::SHOT_FIRE1:
+				Shot[i] = new Tama(circle.pos.x,circle.pos.y,fAng,15,0,10,2,jm->gfx[JetManager::FIRE]);
+				break;
+			case JetManager::SHOT_BEAM1:
+				Shot[i] = new Tama(circle.pos.x, circle.pos.y, fAng, 13, 0, 15, 1, jm->gfx[JetManager::ZIKI_BEAM]);
+				break;
+			case JetManager::SHOT_MISSILE1:
+				Shot[i] = new Tama(circle.pos.x, circle.pos.y, fAng, 20, 0, 5, 4, jm->gfx[JetManager::ZIKI_MISS]);
+				break;
+			case JetManager::SHOT_MISSILE2:
+				Shot[i] = new Tama(circle.pos.x, circle.pos.y, fAng, 22, 0, 2, 6, jm->gfx[JetManager::ENEMY_MISS]);
+				break;
+			default:
+				break;
+			}
 			atkTimer = 0;
 			break;
 		}
@@ -106,6 +125,7 @@ Tama::~Tama() {
 	gm = nullptr;
 	SAFE_DELETE(capsule);
 }
+
 Jet::~Jet() {
 	SAFE_DELETE(houdai);
 	for (int i = 0; i < JetManager::MAX_SHOT_SUU&&Shot[i]; i++) {
@@ -115,6 +135,7 @@ Jet::~Jet() {
 void Jet::addHoudai(int plusX, int plusY, float ang, int img, float hsize, float gAng) {
 	houdai = new houData{ plusX,plusY,ang,img,hsize,gAng };
 }
+
 Jet::Jet(float X, float Y, float Angle, float Size, float Spd, float Health, float As, int gfx) :Tama(X, Y, Angle, Size, 0xffffff, Spd, 1, gfx) {
 	maxhealth = Health;
 	health = Health;
@@ -171,8 +192,8 @@ void EnemyJet::eneMove() {
 		angle += gm->debug->dTime;
 		float w = t2k::vec3Distance(capsule->a, capsule->b) / 2;
 		t2k::vec3 spin(w*cos(angle), w*sin(angle), 0);
-		capsule->a=circle.pos + spin;
-		capsule->b=circle.pos - spin;
+		capsule->a = circle.pos + spin;
+		capsule->b = circle.pos - spin;
 	}
 
 };
@@ -184,10 +205,65 @@ EnemyJet::EnemyJet(float X, float Y, float Angle, float Size, float Spd, float H
 	moveType = NANAME;
 }
 
-PlayerJet::PlayerJet(float X, float Y, float Angle, float Size, float Spd, float Health, float As, int gfx) : Jet(X, Y, Angle, Size, Spd, Health, As, gfx) {}
+PlayerJet::PlayerJet(float X, float Y, float Angle, float Size, float Spd, float Health, float As, int gfx) : Jet(X, Y, Angle, Size, Spd, Health, As, gfx)
+{
+	heat = 0;
+	maxHeat = 100;
+	hounetu = 0.5f;
+	oneSecTimer = 0;
+	overHeat = OVERHEAT_SEC;
+	shotdata[JetManager::SHOT_FIRE1].shotCd = 0.1f;
+	shotdata[JetManager::SHOT_FIRE1].shotHeat = 1.5f;
+	shotdata[JetManager::SHOT_BEAM1].shotCd = 0.05f;
+	shotdata[JetManager::SHOT_BEAM1].shotHeat = 0.5f;
+	shotdata[JetManager::SHOT_MISSILE1].shotCd = 0.3f;
+	shotdata[JetManager::SHOT_MISSILE1].shotHeat = 4.5f;
+	shotdata[JetManager::SHOT_MISSILE2].shotCd = 0.4f;
+	shotdata[JetManager::SHOT_MISSILE2].shotHeat = 6.5f;
+}
 
+void PlayerJet::oneSecSyori() {
+	if (heat>0&&overHeat == OVERHEAT_SEC) {
+		heat -= hounetu;
+	}
 
-void PlayerJet::pMove() {
+}
+void PlayerJet::playerInit() {
+	health = maxhealth;
+	heat = 0;
+	oneSecTimer = 0;
+	liveTimer = 0;
+	overHeat = OVERHEAT_SEC;
+}
+void PlayerJet::update() {
+	JetManager* jm = JetManager::getInstance();
+	//1秒毎の処理
+	liveTimer += gm->debug->dTime;
+	oneSecTimer += gm->debug->dTime;
+	if (oneSecTimer > 1.0f) {
+		oneSecSyori();
+		oneSecTimer = 0;
+	}
+	if(gm->input->isKeyDownTrigger(kEY_s))
+	//heatを表示
+	gm->drawBar(20, 450, 200, 30, heat, maxHeat, GetColor(255, 0, 0), 0xffffff);
+	DrawFormatString(20, 500, 0xffffff, "%d/%dHEAT", (int)heat, (int)maxHeat);
+	//クリックで弾を作る処理
+	if (heat < 100) {
+		if (GetMouseInput()&MOUSE_INPUT_LEFT&&atkTimer >= shotdata[nowshot].shotCd) {
+			shotGen(nowshot);
+			heat += shotdata[nowshot].shotHeat;
+		}
+	}
+	else {//オーバーヒート処理
+		overHeat -= gm->debug->dTime;
+		DrawFormatString(20, 400, GetColor(255, 0, 0), "OVERHEAT!");
+		if (overHeat <= 0) {
+			heat = 0;
+			overHeat = OVERHEAT_SEC;
+		}
+	}
+
 	//動く処理
 	speed = 180 * gm->debug->dTime;
 	if (CheckHitKey(KEY_INPUT_LSHIFT)) {
@@ -208,4 +284,5 @@ void PlayerJet::pMove() {
 	}
 	t2k::vec3Normalize(move);
 	circle.pos += move*speed;
+	drawJet();
 }

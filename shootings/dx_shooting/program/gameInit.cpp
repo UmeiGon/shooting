@@ -8,7 +8,7 @@
 #include "keycon.h"
 #include "cursor.h"
 void gameInit() {
-	SetGraphMode(1900, 1000, 16, 60);
+	SetGraphMode(1500, 800, 16, 60);
 	ChangeWindowMode(TRUE), DxLib_Init(), SetDrawScreen(DX_SCREEN_BACK);//ウィンドウモード変更と初期化と裏画面設定
 	SetDrawMode(DX_DRAWMODE_BILINEAR);
 	GameManager *gm = GameManager::getInstance();
