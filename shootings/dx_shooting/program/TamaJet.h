@@ -14,7 +14,7 @@ class Maru {
 public:
 	t2k::vec3 pos;
 	int r;
-	Maru(t2k::vec3 Pos,int R);
+	Maru(t2k::vec3 Pos, int R);
 	Maru();
 };
 class Tama {
@@ -32,15 +32,15 @@ public:
 	float size = 1;
 	float graphSize;
 	Tama();
-	Tama(float X, float Y, float Angle, float Size, int Col, float Spd, int atk,int gfx);
-	static bool maruHantei(Maru a,Maru b);
-	static void LINE(t2k::vec3 a,t2k::vec3 b,int col);
+	Tama(float X, float Y, float Angle, float Size, int Col, float Spd, int atk, int gfx);
+	static bool maruHantei(Maru a, Maru b);
+	static void LINE(t2k::vec3 a, t2k::vec3 b, int col);
 	bool screenInside(float px, float py, float sabun);
-	void gAngleSet(float ang);
+	void gAngleTyosei(float ang);
 	void addCapsuleHantei(int nagasa);
-	
+
 	virtual ~Tama();
-	
+
 	void draw();
 };
 
@@ -57,32 +57,47 @@ public:
 	float liveTimer;
 	houData *houdai;
 	//生きていたらlive、スポーン前はtaiki、ライフ0で弾が画面にある場合dead、その後弾が無くなったらsyoukyo
-	enum zyoutai{TAIKI,LIVE,DEAD,SYOUKYO};
-	zyoutai stat=TAIKI;
+	enum zyoutai { TAIKI, LIVE, DEAD, SYOUKYO };
+	zyoutai stat = TAIKI;
 	Tama *Shot[JetManager::MAX_SHOT_SUU];
 	Jet(float X, float Y, float Angle, float Size, float Spd, float Health, float As, int gfx);
 	void drawJet();
-	void shotGen(int targetX, int targetY, int col, float spd,int atk=1, int size = 16,int img=-1,float imgAng=0);
+	void shotGen(JetManager::shottype, int targetX = -1, int targetY = -1);
 	void drawHp(float startX, float startY, int Hp, int maxHp);
 	void drawMoveShot(int i);
-	void addHoudai(int plusX,int plusY,float ang,int img,float hsize,float gAng);
+	void addHoudai(int plusX, int plusY, float ang, int img, float hsize, float gAng);
 	~Jet();
 };
+
 class EnemyJet :public Jet {
 public:
 	float x0;
 	float y0;
 	float spawnTimer = 0;
 	float deathTimer = 0;
-	enum movetypes{MAWARU,NANAME,NAMI};
+	enum movetypes { MAWARU, NANAME, NAMI };
 	movetypes moveType = MAWARU;
-	EnemyJet(float X, float Y, float Angle, float Size, float Spd, float Health, float As, int gfx,float sT=0,float dT=20);
+	EnemyJet(float X, float Y, float Angle, float Size, float Spd, float Health, float As, int gfx, float sT = 0, float dT = 20);
 	void eneMove();
 	void capTuizyu(t2k::vec3 Move);
 };
+typedef struct {
+		float shotCd;
+		int shotHeat;
+	}ShotData;
 class PlayerJet :public Jet {
 public:
+	float heat;
+	float maxHeat;
+	float hounetu;
+	float oneSecTimer;
+	float overHeat;
+	JetManager::shottype nowshot;
+	void oneSecSyori();
+	void playerInit();
+	ShotData shotdata[JetManager::MAX_SHOT_SUU];
+	enum teisu { OVERHEAT_SEC = 3 };
 	PlayerJet(float X, float Y, float Angle, float Size, float Spd, float Health, float As, int gfx);
-	void pMove();
+	void update();
 	//弾の配列ポインタをくれれば一つ作れる。
 };

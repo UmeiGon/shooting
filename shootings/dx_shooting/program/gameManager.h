@@ -32,6 +32,7 @@ public:
 	static GameManager* getInstance();
 	GameManager();
 	enum scene{init,title,play,result}gameScene;
+	void drawBar(float startX, float startY,float w, float h,  int value, int maxValue,int col = -1, int fillCol = -1);
 	int winWidth;
 	int winHeight;
 };
