@@ -6,6 +6,7 @@
 #include "../TamaJet.h"
 #include "../keycon.h"
 #include "../cursor.h"
+#include <math.h>
 playscene::playscene() {
 	jm = JetManager::getInstance();
 	playTimer = 0;
@@ -14,15 +15,32 @@ int playscene::update() {
 	GameManager* gm = GameManager::getInstance();
 	playTimer += gm->debug->dTime;
 	DrawFormatString(0, 900, 0xffffff, "%f", playTimer);
-
+	static float at;
+	if (gm->input->isKeyDownTrigger(KEY_INPUT_Y)) {
+		at = atan2(jm->player->circle.pos.x - gm->cursor->mouseX, jm->player->circle.pos.y - gm->cursor->mouseY);
+	}
+	DrawFormatString(60, 0, 0xffffff, "%f", at);
 	jm->player->update();
-
-	
+	if (gm->input->isKeyDownTrigger(KEY_INPUT_1)) {
+		jm->player->nowShot[PlayerJet::MAIN] = PlayerJet::MAIN_FIRE;
+	}
+	if (gm->input->isKeyDownTrigger(KEY_INPUT_2)) {
+		jm->player->nowShot[PlayerJet::MAIN] = PlayerJet::MAIN_BEAM;
+	}
+	if (gm->input->isKeyDownTrigger(KEY_INPUT_3)) {
+		jm->player->nowShot[PlayerJet::SUB] = PlayerJet::SUB_BOOMERANG;
+	}
 	//“G•`‰æ
 	int enemyCount = 0;
+	t2k::vec3 move(800, 300, 0);
+	for (int i = 0; i < 100; i++) {
+		t2k::vec3 a=t2k::vec3BezierSpline(t2k::vec3(0, 0, 0), t2k::vec3(600,500,0),t2k::vec3(700,700,0), move, 0.01f*i);
+		DrawPixel(a.x, a.y, 0xffffff);
+	}
+
 	for (int s = 0; s < JetManager::MAX_ENEMY_SUU; s++) {
 		if (!jm->enemy[s])continue;
-		if (jm->enemy[s]->stat==Jet::TAIKI||jm->enemy[s]->stat==Jet::LIVE) {
+		if (jm->enemy[s]->stat == Jet::TAIKI || jm->enemy[s]->stat == Jet::LIVE) {
 			enemyCount++;
 			//“G‚·‚Û[‚ñ
 			if (jm->enemy[s]->stat == Jet::TAIKI&&playTimer >= jm->enemy[s]->spawnTimer) {
@@ -32,13 +50,14 @@ int playscene::update() {
 
 		if (jm->enemy[s]->stat == Jet::LIVE) {
 			//“G‚Ì’eì‚éB
-			if (jm->enemy[s]->AttackSpeed <= jm->enemy[s]->atkTimer) {
-				jm->enemy[s]->shotGen(JetManager::SHOT_FIRE1,jm->player->circle.pos.x, jm->player->circle.pos.y);
-			}
+			/*if (jm->enemy[s]->AttackSpeed <= jm->enemy[s]->atkTimer) {
+				jm->enemy[s]->shotGen(EnemyJet::FIRE,true,jm->player->circle.pos.x, jm->player->circle.pos.y);
+				jm->enemy[s]->atkTimer = 0;
+			}*/
 			/*if (jm->enemy[s]->deathTimer&& jm->enemy[s]->Timer >= jm->enemy[s]->deathTimer) {
 				SAFE_DELETE(jm->enemy[s]);
 			}*/
-			
+
 			jm->enemy[s]->eneMove();
 			jm->enemy[s]->drawJet();
 			if (jm->hitHantei(jm->enemy[s], jm->player)) {

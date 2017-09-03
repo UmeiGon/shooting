@@ -1,24 +1,27 @@
 ﻿  TamaJet.cpp
 d:\gittest\shooting\shootings\dx_shooting\program\vec3.h(167): warning C4305: '初期化中': 'double' から 'float' へ切り詰めます。
-d:\gittest\shooting\shootings\dx_shooting\program\tamajet.cpp(15): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
-d:\gittest\shooting\shootings\dx_shooting\program\tamajet.cpp(41): warning C4244: '初期化中': 'float' から 'int' への変換です。データが失われる可能性があります。
-d:\gittest\shooting\shootings\dx_shooting\program\tamajet.cpp(55): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
-d:\gittest\shooting\shootings\dx_shooting\program\tamajet.cpp(64): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
-d:\gittest\shooting\shootings\dx_shooting\program\tamajet.cpp(70): warning C4244: '引数': 'int' から 'const float' への変換です。データが失われる可能性があります。
-d:\gittest\shooting\shootings\dx_shooting\program\tamajet.cpp(73): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
-d:\gittest\shooting\shootings\dx_shooting\program\tamajet.cpp(74): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
-d:\gittest\shooting\shootings\dx_shooting\program\tamajet.cpp(77): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
-d:\gittest\shooting\shootings\dx_shooting\program\tamajet.cpp(92): warning C4244: '=': 'double' から 'float' への変換です。データが失われる可能性があります。
-d:\gittest\shooting\shootings\dx_shooting\program\tamajet.cpp(139): warning C4244: '=': 'float' から 'int' への変換です。データが失われる可能性があります。
-d:\gittest\shooting\shootings\dx_shooting\program\tamajet.cpp(140): warning C4244: '=': 'float' から 'int' への変換です。データが失われる可能性があります。
-d:\gittest\shooting\shootings\dx_shooting\program\tamajet.cpp(151): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
-d:\gittest\shooting\shootings\dx_shooting\program\tamajet.cpp(159): warning C4244: '+=': 'double' から 'float' への変換です。データが失われる可能性があります。
-d:\gittest\shooting\shootings\dx_shooting\program\tamajet.cpp(160): warning C4244: '+=': 'double' から 'float' への変換です。データが失われる可能性があります。
-d:\gittest\shooting\shootings\dx_shooting\program\tamajet.cpp(193): warning C4244: '引数': 'double' から 'const float' への変換です。データが失われる可能性があります。
-d:\gittest\shooting\shootings\dx_shooting\program\tamajet.cpp(215): warning C4244: '=': 'float' から 'int' への変換です。データが失われる可能性があります。
-d:\gittest\shooting\shootings\dx_shooting\program\tamajet.cpp(217): warning C4244: '=': 'float' から 'int' への変換です。データが失われる可能性があります。
-d:\gittest\shooting\shootings\dx_shooting\program\tamajet.cpp(219): warning C4244: '=': 'float' から 'int' への変換です。データが失われる可能性があります。
-d:\gittest\shooting\shootings\dx_shooting\program\tamajet.cpp(221): warning C4244: '=': 'float' から 'int' への変換です。データが失われる可能性があります。
-d:\gittest\shooting\shootings\dx_shooting\program\tamajet.cpp(247): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
+d:\gittest\shooting\shootings\dx_shooting\program\tamajet.cpp(18): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
+d:\gittest\shooting\shootings\dx_shooting\program\tamajet.cpp(32): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
+d:\gittest\shooting\shootings\dx_shooting\program\tamajet.cpp(52): warning C4244: '初期化中': 'float' から 'int' への変換です。データが失われる可能性があります。
+d:\gittest\shooting\shootings\dx_shooting\program\tamajet.cpp(66): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
+d:\gittest\shooting\shootings\dx_shooting\program\tamajet.cpp(77): warning C4244: '引数': 'int' から 'const float' への変換です。データが失われる可能性があります。
+d:\gittest\shooting\shootings\dx_shooting\program\tamajet.cpp(80): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
+d:\gittest\shooting\shootings\dx_shooting\program\tamajet.cpp(81): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
+d:\gittest\shooting\shootings\dx_shooting\program\tamajet.cpp(84): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
+d:\gittest\shooting\shootings\dx_shooting\program\tamajet.cpp(99): warning C4244: '=': 'double' から 'float' への変換です。データが失われる可能性があります。
+d:\gittest\shooting\shootings\dx_shooting\program\tamajet.cpp(158): warning C4244: '=': 'float' から 'int' への変換です。データが失われる可能性があります。
+d:\gittest\shooting\shootings\dx_shooting\program\tamajet.cpp(159): warning C4244: '=': 'float' から 'int' への変換です。データが失われる可能性があります。
+d:\gittest\shooting\shootings\dx_shooting\program\tamajet.cpp(171): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
+d:\gittest\shooting\shootings\dx_shooting\program\tamajet.cpp(192): warning C4244: '引数': 'double' から 'const float' への変換です。データが失われる可能性があります。
+d:\gittest\shooting\shootings\dx_shooting\program\tamajet.cpp(208): warning C4244: '引数': 'double' から 'const float' への変換です。データが失われる可能性があります。
+d:\gittest\shooting\shootings\dx_shooting\program\tamajet.cpp(282): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
+d:\gittest\shooting\shootings\dx_shooting\program\tamajet.cpp(283): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
+d:\gittest\shooting\shootings\dx_shooting\program\tamajet.cpp(316): warning C4244: '引数': 'int' から 'const float' への変換です。データが失われる可能性があります。
+d:\gittest\shooting\shootings\dx_shooting\program\tamajet.cpp(357): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
+d:\gittest\shooting\shootings\dx_shooting\program\tamajet.cpp(360): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
+d:\gittest\shooting\shootings\dx_shooting\program\tamajet.cpp(392): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
+d:\gittest\shooting\shootings\dx_shooting\program\tamajet.cpp(435): warning C4244: '引数': 'int' から 'float' への変換です。データが失われる可能性があります。
+d:\gittest\shooting\shootings\dx_shooting\program\tamajet.cpp(439): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
+d:\gittest\shooting\shootings\dx_shooting\program\tamajet.cpp(451): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
   dx_shooting.vcxproj -> D:\gittest\shooting\shootings\dx_shooting\x64\Debug\dx_shooting.exe
   dx_shooting.vcxproj -> D:\gittest\shooting\shootings\dx_shooting\x64\Debug\dx_shooting.pdb (Partial PDB)

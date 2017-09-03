@@ -23,6 +23,7 @@
     <ClCompile Include="program\capsule.cpp" />
     <ClCompile Include="program\cursor.cpp" />
     <ClCompile Include="program\inputBox.cpp" />
+    <ClCompile Include="program\scene\menuScene.cpp" />
     <ClCompile Include="program\scene\resultScene.cpp" />
     <ClCompile Include="program\scene\titleScene.cpp" />
     <ClCompile Include="program\debug.cpp" />
@@ -45,6 +46,7 @@
     <ClInclude Include="program\inputBox.h" />
     <ClInclude Include="program\jetManager.h" />
     <ClInclude Include="program\keycon.h" />
+    <ClInclude Include="program\scene\menuScene.h" />
     <ClInclude Include="program\scene\playScene.h" />
     <ClInclude Include="program\scene\resultScene.h" />
     <ClInclude Include="program\scene\titleScene.h" />
