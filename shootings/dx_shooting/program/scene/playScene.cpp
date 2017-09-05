@@ -17,7 +17,7 @@ int playscene::update() {
 	DrawFormatString(0, 900, 0xffffff, "%f", playTimer);
 	static float at;
 	if (gm->input->isKeyDownTrigger(KEY_INPUT_Y)) {
-		at = atan2(jm->player->circle.pos.x - gm->cursor->mouseX, jm->player->circle.pos.y - gm->cursor->mouseY);
+		at = atan2(gm->cursor->mouseX-jm->player->circle.pos.x , gm->cursor->mouseY-jm->player->circle.pos.y );
 	}
 	DrawFormatString(60, 0, 0xffffff, "%f", at);
 	jm->player->update();
@@ -87,7 +87,7 @@ int playscene::update() {
 				jm->animStart(jm->enemy[i]->circle.pos, jm->bomAnim);
 			}
 			//デスタイマーでdead
-			if (jm->enemy[i]->deathTimer <= playTimer) {
+			if (jm->enemy[i]->deathTime <= playTimer) {
 				jm->enemy[i]->stat = Jet::DEAD;
 			}
 			if (jm->enemy[i] && (jm->enemy[i]->stat == Jet::SYOUKYO)) {

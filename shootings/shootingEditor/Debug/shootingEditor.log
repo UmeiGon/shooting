@@ -1,4 +1,11 @@
-﻿  inputBox.cpp
+﻿  vec3.cpp
+d:\gittest\shooting\shootings\shootingeditor\vec3.h(167): warning C4305: '初期化中': 'double' から 'float' へ切り詰めます。
+d:\gittest\shooting\shootings\shootingeditor\vec3.cpp(160): warning C4244: '初期化中': 'double' から 'float' への変換です。データが失われる可能性があります。
+d:\gittest\shooting\shootings\shootingeditor\vec3.cpp(213): warning C4244: 'return': 'double' から 'float' への変換です。データが失われる可能性があります。
+d:\gittest\shooting\shootings\shootingeditor\vec3.cpp(224): warning C4244: 'return': 'double' から 'float' への変換です。データが失われる可能性があります。
+d:\gittest\shooting\shootings\shootingeditor\vec3.cpp(233): warning C4244: 'return': 'double' から 'float' への変換です。データが失われる可能性があります。
+  keycon.cpp
+  inputBox.cpp
 d:\gittest\shooting\shootings\shootingeditor\inputbox.cpp(25): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
   game_main.cpp
 d:\gittest\shooting\shootings\shootingeditor\vec3.h(167): warning C4305: '初期化中': 'double' から 'float' へ切り詰めます。
@@ -7,6 +14,8 @@ d:\gittest\shooting\shootings\shootingeditor\game_main.cpp(56): warning C4244: '
 d:\gittest\shooting\shootings\shootingeditor\game_main.cpp(59): warning C4244: '=': 'float' から 'int' への変換です。データが失われる可能性があります。
 d:\gittest\shooting\shootings\shootingeditor\game_main.cpp(60): warning C4244: '=': 'float' から 'int' への変換です。データが失われる可能性があります。
 d:\gittest\shooting\shootings\shootingeditor\game_main.cpp(159): warning C4244: '=': 'float' から 'int' への変換です。データが失われる可能性があります。
+  cursor.cpp
   コードを生成中...
+  LINK : 前回のインクリメンタル リンクで D:\gittest\shooting\shootings\shootingEditor\Debug\shootingEditor.exe が見つからなかったか、ビルドされませんでした。フル リンクを行います。
   shootingEditor.vcxproj -> D:\gittest\shooting\shootings\shootingEditor\Debug\shootingEditor.exe
   shootingEditor.vcxproj -> D:\gittest\shooting\shootings\shootingEditor\Debug\shootingEditor.pdb (Partial PDB)

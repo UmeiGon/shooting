@@ -25,6 +25,7 @@ public:
 	t2k::vec3 startPos;
 	int Attack = 1;
 	float liveTimer;
+	float deathTime;
 	float speed;
 	Maru circle;
 	int handle;
@@ -32,11 +33,11 @@ public:
 	float size = 1;
 	float graphSize;
 	Tama();
-	Tama(float X, float Y, float Angle, float Size, float Spd, int atk, int gfx);
+	Tama(float X, float Y, float Angle, float Size, float Spd, int atk, int gfx,float dtimer=-1);
 	static bool maruHantei(Maru a, Maru b);
 	static void LINE(t2k::vec3 a, t2k::vec3 b, int col);
 	bool screenInside(float px, float py, float sabun);
-	t2k::vec3 shotMoveTokusyu();
+	
 	void gAngleTyosei(float ang);
 	void addCapsuleHantei(int nagasa);
 	void capTuizyu(t2k::vec3 Move, bool spined);
@@ -49,13 +50,14 @@ public:
 
 class shotd {
 public:
-	shotd(float Siz, float Spd, int Atk, float Cd, float Heat, int Gfx);
+	shotd(float Siz, float Spd, int Atk, float Cd, float Heat, int Gfx, float dt = -1);
 	float size;
 	float speed;
 	int atk;
 	float shotCd;
 	float shotHeat;
 	int gfx;
+	float deathTime;
 };
 class Jet :public Tama {
 public:
@@ -70,7 +72,8 @@ public:
 	enum zyoutai { TAIKI, LIVE, DEAD, SYOUKYO };
 	zyoutai stat = TAIKI;
 	Tama *Shot[JetManager::MAX_SHOT_SUU];
-	Jet(float X, float Y, float Angle, float Size, float Spd, float Health, float As, int gfx);
+	Jet(float X, float Y, float Angle, float Size, float Spd, float Health, float As, int gfx,float dt);
+	t2k::vec3 shotMoveTokusyu(int sn);
 	void drawJet();
 	void shotGen(shotd s, bool houdaiShot = false, int targetX=-1, int targetY=-1);
 	void shotGen(StandardShotTypes s, bool houd = false, int targetX = -1, int targetY = -1);
@@ -79,7 +82,7 @@ public:
 	void addHoudai(int plusX, int plusY, float ang, int img, float hsize, float gAng);
 	~Jet();
 protected:
-	void shotGenHontai(float siz,float speed,int atk,int gfx,bool hou, int tx,int ty);
+	void shotGenHontai(float siz,float speed,int atk,int gfx,bool hou, int tx,int ty,float dt=-1);
 };
 
 class EnemyJet :public Jet {
@@ -87,7 +90,6 @@ public:
 	float x0;
 	float y0;
 	float spawnTimer = 0;
-	float deathTimer = 0;
 	enum movetypes { MAWARU, NANAME, NAMI };
 	movetypes moveType = MAWARU;
 	EnemyJet(float X, float Y, float Angle, float Size, float Spd, float Health, float As, int gfx, float sT = 0, float dT = 20);
@@ -107,6 +109,7 @@ public:
 	enum armtype{MAIN,SUB,ULT};
 	enum teisu { OVERHEAT_SEC = 3,MAX_ARM_SUU=3,MAX_SHOT_TYPE_SUU=12,MAIN_SUU=3,SUB_SUU=3,ULT_SUU=2};
 	enum pShotType{MAIN_FIRE,MAIN_BEAM,MAIN_BEAM2,SUB_MISSILE,SUB_MISSLE2,SUB_BOOMERANG,ULT_BOMB,ULT_MISSILE,NONE};
+	void PlayerJet::tokusyuSyori(pShotType type);
 	void oneSecSyori();
 	void playerInit();
 	void shotSyori();

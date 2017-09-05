@@ -29,8 +29,12 @@ public:
 	Debug *debug;
 	void playInit();
 	void resultInit(int);
+	void init();
 	static GameManager* getInstance();
 	GameManager();
+	enum teisu{MAX_BACKIMG_SUU=10};
+	enum backname{TITLE_B,MENU_B};
+	int backImg[MAX_BACKIMG_SUU];
 	enum scene{init,title,play,result}gameScene;
 	void drawBar(float startX, float startY,float w, float h,  int value, int maxValue,int col = -1, int fillCol = -1);
 	int winWidth;

@@ -12,8 +12,9 @@ Maru::Maru(t2k::vec3 Pos, int R) {
 	r = R;
 }
 Maru::Maru() {}
-Tama::Tama(float X, float Y, float Angle, float Size, float Spd, int atk, int gfx) {
+Tama::Tama(float X, float Y, float Angle, float Size, float Spd, int atk, int gfx, float dtimer) {
 	handle = gfx;
+	deathTime = dtimer;
 	liveTimer = 0;
 	circle = Maru(t2k::vec3(X, Y, 0), Size / 2);
 	startPos = t2k::vec3(X, Y, 0);
@@ -91,7 +92,7 @@ void Jet::drawHp(float startX, float startY, int Hp, int maxHp) {
 }
 //画像をの角度を調節したい時はimgAngを変更。
 //基本的な弾の発射
-void Jet::shotGenHontai(float siz, float spd, int atk, int gfx, bool hou, int tx, int ty) {
+void Jet::shotGenHontai(float siz, float spd, int atk, int gfx, bool hou, int tx, int ty, float dt) {
 	float fAng = 0;//弾の向き
 	if (tx != -1) {
 		float xsa = (tx - circle.pos.x);
@@ -109,13 +110,13 @@ void Jet::shotGenHontai(float siz, float spd, int atk, int gfx, bool hou, int tx
 	}
 	for (int i = 0; i < JetManager::MAX_SHOT_SUU; i++) {
 		if (!Shot[i]) {
-			Shot[i] = new Tama(outx, outy, fAng, siz, spd, atk, gfx);
+			Shot[i] = new Tama(outx, outy, fAng, siz, spd, atk, gfx, dt);
 			break;
 		}
 	}
 }
 void Jet::shotGen(shotd s, bool houdaiShot, int targetX, int targetY) {
-	shotGenHontai(s.size, s.speed, s.atk, s.gfx, houdaiShot, targetX, targetY);
+	shotGenHontai(s.size, s.speed, s.atk, s.gfx, houdaiShot, targetX, targetY, s.deathTime);
 }
 void Jet::shotGen(StandardShotTypes s, bool houdaiShot, int targetX, int targetY) {
 
@@ -154,7 +155,7 @@ void Jet::addHoudai(int plusX, int plusY, float ang, int img, float hsize, float
 	houdai = new houData{ plusX,plusY,ang,img,hsize,gAng };
 }
 
-Jet::Jet(float X, float Y, float Angle, float Size, float Spd, float Health, float As, int gfx) :Tama(X, Y, Angle, Size, Spd, 1, gfx) {
+Jet::Jet(float X, float Y, float Angle, float Size, float Spd, float Health, float As, int gfx, float dt) :Tama(X, Y, Angle, Size, Spd, 1, gfx, dt) {
 	maxhealth = Health;
 	health = Health;
 	AttackSpeed = As;
@@ -173,30 +174,96 @@ void Jet::drawJet() {
 
 	//drawHp(circle.pos.x - circle.r, circle.pos.y - circle.r, health, maxhealth);
 }
-t2k::vec3 Tama::shotMoveTokusyu() {
+
+void PlayerJet::tokusyuSyori(pShotType type) {
+	switch (type)
+	{
+	case PlayerJet::MAIN_FIRE:
+		break;
+	case PlayerJet::MAIN_BEAM:
+		break;
+	case PlayerJet::MAIN_BEAM2:
+		break;
+	case PlayerJet::SUB_MISSILE:
+		break;
+	case PlayerJet::SUB_MISSLE2:
+		break;
+	case PlayerJet::SUB_BOOMERANG:
+		subAtkTimer += 3.0f;
+		break;
+	case PlayerJet::ULT_BOMB:
+		break;
+	case PlayerJet::ULT_MISSILE:
+		break;
+	case PlayerJet::NONE:
+		break;
+	default:
+		break;
+	}
+}
+
+//-1,-1,-1を返したら普通の弾,-2,-2,-2を返したらdelete弾によっては特殊処理。
+t2k::vec3 Jet::shotMoveTokusyu(int sn) {
 	JetManager* jm = JetManager::getInstance();
-	if (handle == jm->shotGfx[JetManager::BOOMERANG]) {
-		graphAngle += gm->debug->dTime*speed * 3;
-		t2k::vec3 houkou;
-		return (t2k::vec3BezierSpline(startPos, startPos + t2k::vec3(500, 400, 0)*houkou, startPos + t2k::vec3(600, 900, 0)*houkou, startPos + t2k::vec3(800, -900, 0)*houkou, liveTimer *speed / 9.0f)) - circle.pos;
-		int a = 0;
+	if (Shot[sn]->handle == jm->shotGfx[JetManager::BOOMERANG]) {
+		Shot[sn]->graphAngle += gm->debug->dTime*Shot[sn]->speed * 5;
+		t2k::vec3 houkou(1, 1, 0);
+		float  value = Shot[sn]->liveTimer *Shot[sn]->speed / 9.0f;
+		if (value > 1) {
+			//曲線処理が終わったら、最初だけプレイヤーの方向を向く。
+			if (!(Shot[sn]->startPos == t2k::vec3(-500, -500, -500))) {
+				Shot[sn]->angle = atan2(circle.pos.y - Shot[sn]->circle.pos.y, circle.pos.x - Shot[sn]->circle.pos.x);
+				Shot[sn]->startPos = t2k::vec3(-500, -500, -500);
+			}
+			if (maruHantei(Shot[sn]->circle, circle)) {
+				if (this == jm->player) {
+					jm->player->tokusyuSyori(PlayerJet::SUB_BOOMERANG);
+				}
+				return t2k::vec3(-2, -2, -2);
+			}
+			return t2k::vec3(t2k::vec3(cos(Shot[sn]->angle), sin(Shot[sn]->angle), 0) * 200 * Shot[sn]->speed*gm->debug->dTime);
+		}
+		//左上、左下、右下、右上（デフォ）
+		if (Shot[sn]->angle < -MY_PI / 2) {
+			houkou.x *= -1;
+		}
+		else if (Shot[sn]->angle < 0) {
+			houkou;
+		}
+		else if (Shot[sn]->angle < MY_PI / 2) {
+			houkou.y *= -1;
+		}
+		else {
+			houkou *= -1;
+		}
+
+
+		return (t2k::vec3BezierSpline(Shot[sn]->startPos, Shot[sn]->startPos + t2k::vec3(300, -400, 0)*houkou, Shot[sn]->startPos + t2k::vec3(600, -700, 0)*houkou, Shot[sn]->startPos + t2k::vec3(800, 200, 0)*houkou, value) - Shot[sn]->circle.pos);
 		//x800y300
 	}
 
-	return t2k::vec3(0, 0, 0);
+	return t2k::vec3(-1, -1, -1);
 }
 void Jet::drawMoveShot(int shotN) {
-	if (screenInside(Shot[shotN]->circle.pos.x, Shot[shotN]->circle.pos.y, Shot[shotN]->size)) {
+	if (screenInside(Shot[shotN]->circle.pos.x, Shot[shotN]->circle.pos.y, Shot[shotN]->size) || Shot[shotN]->deathTime > 0) {
 		//画面内の時の処理
-		t2k::vec3 move = Shot[shotN]->shotMoveTokusyu();
-		if (move == t2k::vec3(0, 0, 0))move = t2k::vec3(cos(Shot[shotN]->angle), sin(Shot[shotN]->angle), 0)* Shot[shotN]->speed * 100 * gm->debug->dTime;
-		Shot[shotN]->circle.pos += move;
-		Shot[shotN]->capTuizyu(move, true);
-		Shot[shotN]->draw();
-		gm->debug->objSuu++;
+
+		t2k::vec3 move = shotMoveTokusyu(shotN);
+		if (move == t2k::vec3(-1, -1, -1)) {
+			move = t2k::vec3(cos(Shot[shotN]->angle), sin(Shot[shotN]->angle), 0)* Shot[shotN]->speed * 100 * gm->debug->dTime;
+		}
+		if (move == t2k::vec3(-2, -2, -2)|| 0 < Shot[shotN]->deathTime&&Shot[shotN]->deathTime < Shot[shotN]->liveTimer) {
+			SAFE_DELETE(Shot[shotN]);
+		}
+		else {
+			Shot[shotN]->circle.pos += move;
+			Shot[shotN]->capTuizyu(move, true);
+			Shot[shotN]->draw();
+			gm->debug->objSuu++;
+		}
 	}
 	else {
-		SAFE_DELETE(Shot[shotN]);
+		SAFE_DELETE(Shot[shotN])
 	}
 }
 void Tama::capTuizyu(t2k::vec3 Move, bool spined) {
@@ -235,15 +302,14 @@ void EnemyJet::eneMove() {
 	}
 
 };
-EnemyJet::EnemyJet(float X, float Y, float Angle, float Size, float Spd, float Health, float As, int gfx, float sT, float dT) :Jet(X, Y, Angle, Size, Spd, Health, As, gfx) {
+EnemyJet::EnemyJet(float X, float Y, float Angle, float Size, float Spd, float Health, float As, int gfx, float sT, float dT) :Jet(X, Y, Angle, Size, Spd, Health, As, gfx, dT) {
 	x0 = X;
 	y0 = Y;
 	spawnTimer = sT;
-	deathTimer = dT;
 	moveType = NANAME;
 }
 
-PlayerJet::PlayerJet(float X, float Y, float Angle, float Size, float Spd, float Health, float As, int gfx) : Jet(X, Y, Angle, Size, Spd, Health, As, gfx)
+PlayerJet::PlayerJet(float X, float Y, float Angle, float Size, float Spd, float Health, float As, int gfx) : Jet(X, Y, Angle, Size, Spd, Health, As, gfx, 0)
 {
 	heat = 0;
 	maxHeat = 100;
@@ -336,13 +402,14 @@ void PlayerJet::shotSyori() {
 	}
 	int a = 0;
 }
-shotd::shotd(float Siz, float Spd, int Atk, float Cd, float Heat, int Gfx) {
+shotd::shotd(float Siz, float Spd, int Atk, float Cd, float Heat, int Gfx, float dt) {
 	size = Siz;
 	speed = Spd;
 	atk = Atk;
 	shotCd = Cd;
 	shotHeat = Heat;
 	gfx = Gfx;
+	deathTime = dt;
 }
 //playerのshotdataに中身を入れる。・・・メモリ節約のため
 void PlayerJet::shotDataSet(pShotType shotN) {
@@ -366,7 +433,7 @@ void PlayerJet::shotDataSet(pShotType shotN) {
 		shotData[shotN] = new shotd(12, 8, 15, 15.0f, 10.0f, jm->shotGfx[JetManager::MISS2]);
 		break;
 	case PlayerJet::SUB_BOOMERANG:
-		shotData[shotN] = new shotd(30, 3, 10, 1.0f, 3.0f, jm->shotGfx[JetManager::BOOMERANG]);
+		shotData[shotN] = new shotd(50, 3, 10, 10.0f, 3.0f, jm->shotGfx[JetManager::BOOMERANG], 6.0f);
 		break;
 	case PlayerJet::ULT_BOMB:
 		break;
