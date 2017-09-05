@@ -15,6 +15,7 @@ void gameInit() {
 	JetManager *jm = JetManager::getInstance();
 	gm->scene_title = new titlescene();
 	gm->cursor->graphInit();
+	gm->init();
 	LoadDivGraph("images/bakuhatsu01.png", 12, 3, 4, 64, 64, jm->bomAnim);
 	GetWindowSize(&gm->winWidth, &gm->winHeight);
 	jm->init();
