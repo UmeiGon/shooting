@@ -15,9 +15,8 @@ int Capsule::senbunKyori(Capsule cap1, Capsule cap2) {
 
 	t2k::vec3 abVec(cap1.b.x - cap1.a.x, cap1.b.y - cap1.a.y, 0);//線ABのベクトル
 	t2k::vec3 abTaniVec = t2k::vec3Normalize(abVec);//線ABの単位ベクトルをノーマライズで求める
-	t2k::vec3 test1(-abTaniVec.y, abTaniVec.x, 0);
 
-	int Bdis = abTaniVec.x*abVec.x + abTaniVec.y*abVec.y;//ABの内積を出す。
+	int Bdis = abTaniVec.x*abVec.x + abTaniVec.y*abVec.y;//ABの長さを出す。
 
 	t2k::vec3 P[2]{ cap2.a,cap2.b };
 	int kouho[2];

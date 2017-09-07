@@ -1,35 +1,4 @@
-﻿  playScene.cpp
+﻿  menuScene.cpp
 d:\gittest\shooting\shootings\dx_shooting\program\vec3.h(167): warning C4305: '初期化中': 'double' から 'float' へ切り詰めます。
-d:\gittest\shooting\shootings\dx_shooting\program\scene\playscene.cpp(20): warning C4244: '=': 'double' から 'float' への変換です。データが失われる可能性があります。
-d:\gittest\shooting\shootings\dx_shooting\program\scene\playscene.cpp(38): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
-  menuScene.cpp
-  TamaJet.cpp
-d:\gittest\shooting\shootings\dx_shooting\program\vec3.h(167): warning C4305: '初期化中': 'double' から 'float' へ切り詰めます。
-d:\gittest\shooting\shootings\dx_shooting\program\tamajet.cpp(19): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
-d:\gittest\shooting\shootings\dx_shooting\program\tamajet.cpp(33): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
-d:\gittest\shooting\shootings\dx_shooting\program\tamajet.cpp(53): warning C4244: '初期化中': 'float' から 'int' への変換です。データが失われる可能性があります。
-d:\gittest\shooting\shootings\dx_shooting\program\tamajet.cpp(67): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
-d:\gittest\shooting\shootings\dx_shooting\program\tamajet.cpp(78): warning C4244: '引数': 'int' から 'const float' への変換です。データが失われる可能性があります。
-d:\gittest\shooting\shootings\dx_shooting\program\tamajet.cpp(81): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
-d:\gittest\shooting\shootings\dx_shooting\program\tamajet.cpp(82): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
-d:\gittest\shooting\shootings\dx_shooting\program\tamajet.cpp(85): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
-d:\gittest\shooting\shootings\dx_shooting\program\tamajet.cpp(100): warning C4244: '=': 'double' から 'float' への変換です。データが失われる可能性があります。
-d:\gittest\shooting\shootings\dx_shooting\program\tamajet.cpp(159): warning C4244: '=': 'float' から 'int' への変換です。データが失われる可能性があります。
-d:\gittest\shooting\shootings\dx_shooting\program\tamajet.cpp(160): warning C4244: '=': 'float' から 'int' への変換です。データが失われる可能性があります。
-d:\gittest\shooting\shootings\dx_shooting\program\tamajet.cpp(172): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
-d:\gittest\shooting\shootings\dx_shooting\program\tamajet.cpp(215): warning C4244: '=': 'double' から 'float' への変換です。データが失われる可能性があります。
-d:\gittest\shooting\shootings\dx_shooting\program\tamajet.cpp(224): warning C4244: '引数': 'double' から 'const float' への変換です。データが失われる可能性があります。
-d:\gittest\shooting\shootings\dx_shooting\program\tamajet.cpp(253): warning C4244: '引数': 'double' から 'const float' への変換です。データが失われる可能性があります。
-d:\gittest\shooting\shootings\dx_shooting\program\tamajet.cpp(275): warning C4244: '引数': 'double' から 'const float' への変換です。データが失われる可能性があります。
-d:\gittest\shooting\shootings\dx_shooting\program\tamajet.cpp(348): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
-d:\gittest\shooting\shootings\dx_shooting\program\tamajet.cpp(349): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
-d:\gittest\shooting\shootings\dx_shooting\program\tamajet.cpp(382): warning C4244: '引数': 'int' から 'const float' への変換です。データが失われる可能性があります。
-d:\gittest\shooting\shootings\dx_shooting\program\tamajet.cpp(424): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
-d:\gittest\shooting\shootings\dx_shooting\program\tamajet.cpp(427): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
-d:\gittest\shooting\shootings\dx_shooting\program\tamajet.cpp(459): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
-d:\gittest\shooting\shootings\dx_shooting\program\tamajet.cpp(502): warning C4244: '引数': 'int' から 'float' への変換です。データが失われる可能性があります。
-d:\gittest\shooting\shootings\dx_shooting\program\tamajet.cpp(506): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
-d:\gittest\shooting\shootings\dx_shooting\program\tamajet.cpp(518): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
-  コードを生成中...
   dx_shooting.vcxproj -> D:\gittest\shooting\shootings\dx_shooting\x64\Debug\dx_shooting.exe
   dx_shooting.vcxproj -> D:\gittest\shooting\shootings\dx_shooting\x64\Debug\dx_shooting.pdb (Partial PDB)

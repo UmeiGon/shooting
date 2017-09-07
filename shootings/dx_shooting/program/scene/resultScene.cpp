@@ -1,6 +1,8 @@
 #include "resultScene.h"
 #include "../inputBox.h"
 #include "playScene.h"
+#include "../gameManager.h"
+#include "../keycon.h"
 resultscene::resultscene(int kekka) {
 	retryButton = new ClickBox(300, 400, 200, 100, "Retry", 25, 25);
 	switch (kekka)
@@ -15,9 +17,13 @@ resultscene::resultscene(int kekka) {
 		break;
 	}
 }
-bool resultscene::update() {
-	if (retryButton->update()) {
-		return true;
+resultscene::go resultscene::update() {
+	GameManager* gm = GameManager::getInstance();
+	if (gm->input->isKeyDownTrigger(KEY_INPUT_ESCAPE)) {
+		return GO_MENU;
 	}
-	return false;
+	if (retryButton->update()) {
+		return GO_PLAY;
+	}
+	return NONE;
 }

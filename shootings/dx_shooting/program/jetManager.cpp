@@ -40,6 +40,9 @@ void JetManager::init() {
 	shotGfx[MISS2] = DerivationGraph(50, 130, 47, 17,  gfx[ENEMY_ZENTAI]);
 	shotGfx[BEAM2] = DerivationGraph(33, 131, 13, 4, c);
 	shotGfx[BOOMERANG] = LoadGraph("images/Boomerang.png");
+	//UIのグラ
+	UIgfx[MIGI] = LoadGraph("images/migi.png");
+	UIgfx[HIDARI] = LoadGraph("images/hidari.png");
 	//player生成
 	GameManager* gm = GameManager::getInstance();
 	player = new PlayerJet(gm->winWidth / 2, gm->winHeight / 2, 0, 50, 10, 3, 0.2, gfx[JetManager::ZIKI_JET]);
@@ -51,6 +54,14 @@ JetManager::JetManager() {
 	memset(enemy, 0, sizeof(enemy));
 	memset(targetJet, 0, sizeof(targetJet));
 	player = nullptr;
+}
+//ショットのアイコンを場所とサイズを指定して描画
+void JetManager::shotIconDraw(int fx,int fy,int armtype,int type,int fsize) {
+	if (type == PlayerJet::NONE||!player->shotData[armtype][type])return;
+	int sgfx= player->shotData[armtype][type]->gfx;
+	int a, b;
+	GetGraphSize(sgfx, &a, &b);
+	DrawRotaGraph(fx,fy,(float)fsize/(float)a,0,sgfx,true);
 }
 void JetManager::animationUpdate() {
 	GameManager *gm = GameManager::getInstance();

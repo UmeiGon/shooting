@@ -175,27 +175,47 @@ void Jet::drawJet() {
 	//drawHp(circle.pos.x - circle.r, circle.pos.y - circle.r, health, maxhealth);
 }
 
-void PlayerJet::tokusyuSyori(pShotType type) {
-	switch (type)
+void PlayerJet::tokusyuSyori(armtype atype, pShotType type) {
+	switch (atype)
 	{
-	case PlayerJet::MAIN_FIRE:
+	case PlayerJet::MAIN:
+		switch (type)
+		{
+		case PlayerJet::MAIN_FIRE:
+			break;
+		case PlayerJet::MAIN_BEAM:
+			break;
+		case PlayerJet::MAIN_BEAM2:
+			break;
+		default:
+			break;
+		}
 		break;
-	case PlayerJet::MAIN_BEAM:
+	case PlayerJet::SUB:
+		switch (type)
+		{
+
+		case PlayerJet::SUB_MISSILE:
+			break;
+		case PlayerJet::SUB_MISSLE2:
+			break;
+		case PlayerJet::SUB_BOOMERANG:
+			break;
+		default:
+			break;
+		}
 		break;
-	case PlayerJet::MAIN_BEAM2:
-		break;
-	case PlayerJet::SUB_MISSILE:
-		break;
-	case PlayerJet::SUB_MISSLE2:
-		break;
-	case PlayerJet::SUB_BOOMERANG:
-		subAtkTimer += 3.0f;
-		break;
-	case PlayerJet::ULT_BOMB:
-		break;
-	case PlayerJet::ULT_MISSILE:
-		break;
-	case PlayerJet::NONE:
+	case PlayerJet::ULT:
+		switch (type)
+		{
+
+		case PlayerJet::ULT_BOMB:
+			break;
+		case PlayerJet::ULT_MISSILE:
+			break;
+		default:
+			break;
+		}
 		break;
 	default:
 		break;
@@ -217,7 +237,7 @@ t2k::vec3 Jet::shotMoveTokusyu(int sn) {
 			}
 			if (maruHantei(Shot[sn]->circle, circle)) {
 				if (this == jm->player) {
-					jm->player->tokusyuSyori(PlayerJet::SUB_BOOMERANG);
+					jm->player->tokusyuSyori(PlayerJet::SUB,PlayerJet::SUB_BOOMERANG);
 				}
 				return t2k::vec3(-2, -2, -2);
 			}
@@ -252,7 +272,7 @@ void Jet::drawMoveShot(int shotN) {
 		if (move == t2k::vec3(-1, -1, -1)) {
 			move = t2k::vec3(cos(Shot[shotN]->angle), sin(Shot[shotN]->angle), 0)* Shot[shotN]->speed * 100 * gm->debug->dTime;
 		}
-		if (move == t2k::vec3(-2, -2, -2)|| 0 < Shot[shotN]->deathTime&&Shot[shotN]->deathTime < Shot[shotN]->liveTimer) {
+		if (move == t2k::vec3(-2, -2, -2) || 0 < Shot[shotN]->deathTime&&Shot[shotN]->deathTime < Shot[shotN]->liveTimer) {
 			SAFE_DELETE(Shot[shotN]);
 		}
 		else {
@@ -318,52 +338,73 @@ PlayerJet::PlayerJet(float X, float Y, float Angle, float Size, float Spd, float
 	overHeatTime = OVERHEAT_SEC;
 	subAtkTimer = 0;
 	memset(shotData, 0, sizeof(shotData));
-	shotDataSet(MAIN_FIRE);
-	shotDataSet(SUB_MISSILE);
-	shotDataSet(MAIN_BEAM);
-	shotDataSet(SUB_BOOMERANG);
+	shotDataSet(MAIN, MAIN_FIRE);
+	shotDataSet(SUB, SUB_MISSILE);
+	shotDataSet(MAIN, MAIN_BEAM);
+	shotDataSet(SUB, SUB_BOOMERANG);
 	nowShot[MAIN] = MAIN_FIRE;
 	nowShot[SUB] = SUB_MISSILE;
+	nowShot[ULT] = NONE;
 
 }
 
 
-void PlayerJet::playerShotGen(pShotType type) {
-	heat += shotData[type]->shotHeat;
-	if (type < MAIN_SUU) {
-		shotGen(*shotData[type]);
+void PlayerJet::playerShotGen(armtype atype, pShotType type) {
+	heat += shotData[atype][type]->shotHeat;
+	if (atype == MAIN) {
+		shotGen(*shotData[atype][type]);
 	}
-	else if (type < MAIN_SUU + SUB_SUU)
+	else if (atype == SUB)
 	{
-		shotGen(*shotData[type], true, gm->cursor->mouseX, gm->cursor->mouseY);
+		shotGen(*shotData[atype][type], true, gm->cursor->mouseX, gm->cursor->mouseY);
 	}
 	else {
 	}
 	//特殊処理
-	switch (type)
+	switch (atype)
 	{
-	case PlayerJet::MAIN_FIRE:
-		//3WAY
-		if (heat > 60) {
-			shotGen(*shotData[type], false, circle.pos.x + 100, circle.pos.y - 10);
-			shotGen(*shotData[type], false, circle.pos.x + 100, circle.pos.y + 10);
+	case PlayerJet::MAIN:
+		switch (type)
+		{
+		case PlayerJet::MAIN_FIRE:
+			//3WAY
+			if (heat > 60) {
+				shotGen(*shotData[atype][type], false, circle.pos.x + 100, circle.pos.y - 10);
+				shotGen(*shotData[atype][type], false, circle.pos.x + 100, circle.pos.y + 10);
+			}
+			break;
+		case PlayerJet::MAIN_BEAM:
+			break;
+		case PlayerJet::MAIN_BEAM2:
+			break;
+		default:
+			break;
 		}
 		break;
-	case PlayerJet::MAIN_BEAM:
+	case PlayerJet::SUB:
+		switch (type)
+		{
+
+		case PlayerJet::SUB_MISSILE:
+			break;
+		case PlayerJet::SUB_MISSLE2:
+			break;
+		case PlayerJet::SUB_BOOMERANG:
+			break;
+		default:
+			break;
+		}
 		break;
-	case PlayerJet::MAIN_BEAM2:
-		break;
-	case PlayerJet::SUB_MISSILE:
-		break;
-	case PlayerJet::SUB_MISSLE2:
-		break;
-	case PlayerJet::SUB_BOOMERANG:
-		break;
-	case PlayerJet::ULT_BOMB:
-		break;
-	case PlayerJet::ULT_MISSILE:
-		break;
-	case PlayerJet::NONE:
+	case PlayerJet::ULT:
+		switch (type)
+		{
+		case PlayerJet::ULT_BOMB:
+			break;
+		case PlayerJet::ULT_MISSILE:
+			break;
+		default:
+			break;
+		}
 		break;
 	default:
 		break;
@@ -392,12 +433,12 @@ void PlayerJet::playerInit() {
 
 
 void PlayerJet::shotSyori() {
-	if (GetMouseInput()&MOUSE_INPUT_LEFT&&atkTimer >= shotData[nowShot[MAIN]]->shotCd) {
-		playerShotGen(nowShot[MAIN]);
+	if (GetMouseInput()&MOUSE_INPUT_LEFT&&atkTimer >= shotData[MAIN][nowShot[MAIN]]->shotCd) {
+		playerShotGen(MAIN, nowShot[MAIN]);
 		atkTimer = 0;
 	}
-	if (heat < 100 && gm->input->isMouseDownTrigger(MOUSE_INPUT_RIGHT) && subAtkTimer >= shotData[nowShot[SUB]]->shotCd) {
-		playerShotGen(nowShot[SUB]);
+	if (heat < 100 && gm->input->isMouseDownTrigger(MOUSE_INPUT_RIGHT) && subAtkTimer >= shotData[SUB][nowShot[SUB]]->shotCd) {
+		playerShotGen(SUB, nowShot[SUB]);
 		subAtkTimer = 0;
 	}
 	int a = 0;
@@ -412,34 +453,55 @@ shotd::shotd(float Siz, float Spd, int Atk, float Cd, float Heat, int Gfx, float
 	deathTime = dt;
 }
 //playerのshotdataに中身を入れる。・・・メモリ節約のため
-void PlayerJet::shotDataSet(pShotType shotN) {
-	if (shotData[shotN])return;
+void PlayerJet::shotDataSet(armtype atype, pShotType shotN) {
+	if (shotData[atype][shotN])return;
 	JetManager* jm = JetManager::getInstance();
-	switch (shotN)
+	switch (atype)
 	{
-	case PlayerJet::MAIN_FIRE:
-		shotData[shotN] = new shotd(15, 10, 5, 0.2f, 0.5f, jm->shotGfx[JetManager::FIRE1]);
+	case PlayerJet::MAIN:
+		switch (shotN)
+		{
+		case PlayerJet::MAIN_FIRE:
+			shotData[MAIN][shotN] = new shotd(15, 10, 5, 0.2f, 0.5f, jm->shotGfx[JetManager::FIRE1]);
+			break;
+		case PlayerJet::MAIN_BEAM:
+			shotData[MAIN][shotN] = new shotd(5, 12, 1.2f, 0.1f, 0.25f, jm->shotGfx[JetManager::BEAM1]);
+			break;
+		case PlayerJet::MAIN_BEAM2:
+			shotData[MAIN][shotN] = new shotd(3, 20, 0.2f, 0.05f, 0.15f, jm->shotGfx[JetManager::BEAM2]);
+			break;
+		default:
+			break;
+		}
 		break;
-	case PlayerJet::MAIN_BEAM:
-		shotData[shotN] = new shotd(5, 12, 1.2f, 0.1f, 0.25f, jm->shotGfx[JetManager::BEAM1]);
+	case PlayerJet::SUB:
+		switch (shotN)
+		{
+
+		case PlayerJet::SUB_MISSILE:
+			shotData[SUB][shotN] = new shotd(10, 14, 6, 6.0f, 4.0f, jm->shotGfx[JetManager::MISS1]);
+			break;
+		case PlayerJet::SUB_MISSLE2:
+			shotData[SUB][shotN] = new shotd(12, 8, 15, 15.0f, 10.0f, jm->shotGfx[JetManager::MISS2]);
+			break;
+		case PlayerJet::SUB_BOOMERANG:
+			shotData[SUB][shotN] = new shotd(50, 3, 10, 10.0f, 3.0f, jm->shotGfx[JetManager::BOOMERANG], 6.0f);
+			break;
+		default:
+			break;
+		}
 		break;
-	case PlayerJet::MAIN_BEAM2:
-		shotData[shotN] = new shotd(3, 20, 0.2f, 0.05f, 0.15f, jm->shotGfx[JetManager::BEAM2]);
-		break;
-	case PlayerJet::SUB_MISSILE:
-		shotData[shotN] = new shotd(10, 14, 6, 6.0f, 4.0f, jm->shotGfx[JetManager::MISS1]);
-		break;
-	case PlayerJet::SUB_MISSLE2:
-		shotData[shotN] = new shotd(12, 8, 15, 15.0f, 10.0f, jm->shotGfx[JetManager::MISS2]);
-		break;
-	case PlayerJet::SUB_BOOMERANG:
-		shotData[shotN] = new shotd(50, 3, 10, 10.0f, 3.0f, jm->shotGfx[JetManager::BOOMERANG], 6.0f);
-		break;
-	case PlayerJet::ULT_BOMB:
-		break;
-	case PlayerJet::ULT_MISSILE:
-		break;
-	case PlayerJet::NONE:
+	case PlayerJet::ULT:
+		switch (shotN)
+		{
+
+		case PlayerJet::ULT_BOMB:
+			break;
+		case PlayerJet::ULT_MISSILE:
+			break;
+		default:
+			break;
+		}
 		break;
 	default:
 		break;
@@ -459,8 +521,8 @@ void PlayerJet::update() {
 	gm->drawBar(20, 450, 200, 30, heat, maxHeat, GetColor(255, 0, 0), 0xffffff);
 	DrawFormatString(20, 500, 0xffffff, "%d/%dHEAT", (int)heat, (int)maxHeat);
 	//クリックで弾を作る処理
-	if (nowShot[MAIN] >= 0)DrawFormatString(0, 40, 0xffffff, "メイン武器使えるまで:%f", (shotData[nowShot[MAIN]]->shotCd - atkTimer > 0) ? shotData[nowShot[MAIN]]->shotCd - atkTimer : 0);
-	if (nowShot[SUB] >= 0)DrawFormatString(0, 80, 0xffffff, "サブ武器使えるまで:%f", (shotData[nowShot[SUB]]->shotCd - subAtkTimer > 0) ? shotData[nowShot[SUB]]->shotCd - subAtkTimer : 0);
+	if (nowShot[MAIN] >= 0)DrawFormatString(0, 40, 0xffffff, "メイン武器使えるまで:%f", (shotData[MAIN][nowShot[MAIN]]->shotCd - atkTimer > 0) ? shotData[MAIN][nowShot[MAIN]]->shotCd - atkTimer : 0);
+	if (nowShot[SUB] >= 0)DrawFormatString(0, 80, 0xffffff, "サブ武器使えるまで:%f", (shotData[SUB][nowShot[SUB]]->shotCd - subAtkTimer > 0) ? shotData[SUB][nowShot[SUB]]->shotCd - subAtkTimer : 0);
 	if (heat < 100) {
 		shotSyori();
 	}
