@@ -5,6 +5,7 @@
 #include "scene/playScene.h"
 #include "scene/titleScene.h"
 #include "scene/resultScene.h"
+#include "scene/menuScene.h"
 #include "debug.h"
 #include "keycon.h"
 #include "cursor.h"
@@ -39,15 +40,36 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			case playscene::FIGHTING:
 				break;
 			case playscene::VICTORY:
+				gm->playEnd();
 				gm->resultInit(playscene::VICTORY);
 				break;
 			case playscene::DEFEAT:
+				gm->playEnd();
 				gm->resultInit(playscene::DEFEAT);
 				break;
 			}
 			break;
 		case GameManager::result:
-			if (gm->scene_result->update()) {
+			switch (gm->scene_result->update())
+			{
+
+			case resultscene::GO_MENU:
+				gm->resultEnd();
+				gm->menuInit();
+				break;
+			case resultscene::GO_PLAY:
+				gm->resultEnd();
+				gm->playInit();
+				break;
+			case resultscene::NONE:
+				break;
+			default:
+				break;
+			}
+			break;
+		case GameManager::menu:
+			if (gm->scene_menu->update()) {
+				gm->menuEnd();
 				gm->playInit();
 			}
 			break;
@@ -56,7 +78,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		}
 
 		DrawRotaGraph(gm->cursor->mouseX, gm->cursor->mouseY, 1.0, 0, gm->cursor->Image[Cursor::def], true);
-		if (gm->input->isKeyDownTrigger(KEY_INPUT_F3))gm->debug->showDebug=!gm->debug->showDebug;
+		if (gm->input->isKeyDownTrigger(KEY_INPUT_F3))gm->debug->showDebug = !gm->debug->showDebug;
 		gm->debug->update();
 	}
 

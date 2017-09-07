@@ -12,11 +12,9 @@ titlescene::titlescene() {
 //t2k::vec3 *point;
 //int r = 60;
 bool titlescene::update() {
-	//if (!cap1) {
-	//	cap1 = new Capsule(t2k::vec3(90,40,0),t2k::vec3(69,222,0),40);
-	//	point = new t2k::vec3(600, 400, 0);
-	//}
-	//Capsule::testCap(cap1, new Capsule, point, r);
+	
+
+
 	if (startButton->update()) {
 		return true;
 	}

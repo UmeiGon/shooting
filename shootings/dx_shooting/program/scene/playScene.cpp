@@ -13,6 +13,7 @@ playscene::playscene() {
 }
 int playscene::update() {
 	GameManager* gm = GameManager::getInstance();
+	JetManager* jm = JetManager::getInstance();
 	playTimer += gm->debug->dTime;
 	DrawFormatString(0, 900, 0xffffff, "%f", playTimer);
 	static float at;

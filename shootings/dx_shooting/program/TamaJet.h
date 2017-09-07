@@ -107,16 +107,16 @@ public:
 	float subAtkTimer;
 	bool moved;
 	enum armtype{MAIN,SUB,ULT};
-	enum teisu { OVERHEAT_SEC = 3,MAX_ARM_SUU=3,MAX_SHOT_TYPE_SUU=12,MAIN_SUU=3,SUB_SUU=3,ULT_SUU=2};
-	enum pShotType{MAIN_FIRE,MAIN_BEAM,MAIN_BEAM2,SUB_MISSILE,SUB_MISSLE2,SUB_BOOMERANG,ULT_BOMB,ULT_MISSILE,NONE};
-	void PlayerJet::tokusyuSyori(pShotType type);
+	enum teisu { OVERHEAT_SEC = 3,MAX_ARM_SUU=3,MAX_SHOT_TYPE=3};
+	enum pShotType{MAIN_FIRE,MAIN_BEAM,MAIN_BEAM2,SUB_MISSILE=0,SUB_MISSLE2,SUB_BOOMERANG,ULT_BOMB=0,ULT_MISSILE,NONE=-1};
+	void PlayerJet::tokusyuSyori(armtype atype,pShotType type);
 	void oneSecSyori();
 	void playerInit();
 	void shotSyori();
-	void playerShotGen(pShotType type);
-	shotd *shotData[MAX_SHOT_TYPE_SUU];
+	void playerShotGen(armtype atype,pShotType type);
+	shotd *shotData[MAX_ARM_SUU][MAX_SHOT_TYPE];
 	
-	void shotDataSet(pShotType shotN);
+	void shotDataSet(armtype atype,pShotType shotN);
 	pShotType nowShot[MAX_ARM_SUU];
 	PlayerJet(float X, float Y, float Angle, float Size, float Spd, float Health, float As, int gfx);
 	void update();
