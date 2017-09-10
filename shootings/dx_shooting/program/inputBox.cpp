@@ -18,11 +18,11 @@ bool ClickBox::update() {
 	if (handle >= 0) {
 		int w, h;
 		GetGraphSize(handle, &w, &h);
-		DrawRotaGraph(x, y,(int)Fwidth/(int)w,0, handle,true);
+		DrawRotaGraph(x+(float)Fwidth/2, y+(float)Fheight/2,(float)Fwidth/(float)w,0, handle,true);
 	}
-	else {
-		DrawBox(x, y, x + Fwidth, y + Fheight, 0xffffff, TRUE);
-	}
+	
+	else DrawBox(x, y, x + Fwidth, y + Fheight, 0xffffff, TRUE);
+	
 	DrawFormatString(x + offsettextX, y + offsettextY + 5, GetColor(20, 25, 25), text.c_str());
 	DrawFormatString(x + offsettextX, y + offsettextY + GetFontSize()*1.5f, GetColor(20, 25, 25), text2.c_str());
 	if (x <= gm->cursor->mouseX&&gm->cursor->mouseX <= x + Fwidth && y <= gm->cursor->mouseY&&gm->cursor->mouseY <= y + Fheight) {

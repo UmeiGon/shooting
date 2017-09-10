@@ -1,4 +1,5 @@
 #pragma once
+#include "vec3.h"
 class Capsule {
 public:
 	t2k::vec3 a;

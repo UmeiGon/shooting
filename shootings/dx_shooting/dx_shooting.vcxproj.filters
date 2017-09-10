@@ -19,6 +19,9 @@
     <Filter Include="ソース ファイル\program\scene">
       <UniqueIdentifier>{9534f616-a47e-42aa-a1a4-eaf6aec89167}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\program\tamajet">
+      <UniqueIdentifier>{e585694d-d110-44a4-8893-669fdae932b0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="program\keycon.cpp">
@@ -30,9 +33,6 @@
     <ClCompile Include="program\vec3.cpp">
       <Filter>ソース ファイル\program</Filter>
     </ClCompile>
-    <ClCompile Include="program\TamaJet.cpp">
-      <Filter>ソース ファイル\program</Filter>
-    </ClCompile>
     <ClCompile Include="program\debug.cpp">
       <Filter>ソース ファイル\program</Filter>
     </ClCompile>
@@ -40,9 +40,6 @@
       <Filter>ソース ファイル\program</Filter>
     </ClCompile>
     <ClCompile Include="program\jetManager.cpp">
-      <Filter>ソース ファイル\program</Filter>
-    </ClCompile>
-    <ClCompile Include="program\gameInit.cpp">
       <Filter>ソース ファイル\program</Filter>
     </ClCompile>
     <ClCompile Include="program\scene\playScene.cpp">
@@ -69,15 +66,21 @@
     <ClCompile Include="program\scene\menuScene.cpp">
       <Filter>ソース ファイル\program\scene</Filter>
     </ClCompile>
+    <ClCompile Include="program\enemyJet.cpp">
+      <Filter>ソース ファイル\program\tamajet</Filter>
+    </ClCompile>
+    <ClCompile Include="program\TamaJet.cpp">
+      <Filter>ソース ファイル\program\tamajet</Filter>
+    </ClCompile>
+    <ClCompile Include="program\playerJet.cpp">
+      <Filter>ソース ファイル\program\tamajet</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="program\keycon.h">
       <Filter>ソース ファイル\program</Filter>
     </ClInclude>
     <ClInclude Include="program\vec3.h">
-      <Filter>ソース ファイル\program</Filter>
-    </ClInclude>
-    <ClInclude Include="program\TamaJet.h">
       <Filter>ソース ファイル\program</Filter>
     </ClInclude>
     <ClInclude Include="program\debug.h">
@@ -87,9 +90,6 @@
       <Filter>ソース ファイル\program</Filter>
     </ClInclude>
     <ClInclude Include="program\jetManager.h">
-      <Filter>ソース ファイル\program</Filter>
-    </ClInclude>
-    <ClInclude Include="program\gameInit.h">
       <Filter>ソース ファイル\program</Filter>
     </ClInclude>
     <ClInclude Include="program\scene\playScene.h">
@@ -116,5 +116,22 @@
     <ClInclude Include="program\scene\menuScene.h">
       <Filter>ソース ファイル\program\scene</Filter>
     </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="program\enemyJet.h">
+      <Filter>ソース ファイル\program\tamajet</Filter>
+    </ClInclude>
+    <ClInclude Include="program\TamaJet.h">
+      <Filter>ソース ファイル\program\tamajet</Filter>
+    </ClInclude>
+    <ClInclude Include="program\playerJet.h">
+      <Filter>ソース ファイル\program\tamajet</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Resource.rc">
+      <Filter>リソース ファイル</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>
