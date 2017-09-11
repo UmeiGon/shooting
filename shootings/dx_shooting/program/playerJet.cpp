@@ -7,7 +7,7 @@
 #include <typeinfo.h>
 PlayerJet::PlayerJet(float X, float Y, float Angle, float Size, float Spd, float Health, float As, int gfx) : Jet(X, Y, Angle, Size, Spd, Health, As, gfx, 0)
 {
-	ultPoint = 0;
+	energyPoint = 0;
 	eisyo = 0;
 	heat = 0;
 	maxHeat = 100;
@@ -17,6 +17,8 @@ PlayerJet::PlayerJet(float X, float Y, float Angle, float Size, float Spd, float
 	subAtkTimer = 0;
 	memset(shotData, 0, sizeof(shotData));
 	memset(koki, 0, sizeof(koki));
+	memset(runes,0,sizeof(runes));
+	ironsuu = 0;
 	shotDataSet(MAIN, MAIN_FIRE);
 	shotDataSet(MAIN, MAIN_BEAM);
 	shotDataSet(MAIN, MAIN_BEAM2);
@@ -183,14 +185,14 @@ void PlayerJet::playerInit() {
 		SAFE_DELETE(Shot[s]);
 	}
 	memset(koki, 0, sizeof(koki));
-	circle.pos = t2k::vec3(gm->battleWidth / 2, gm->battleWidth / 2, 0);
+	circle.pos = t2k::vec3(gm->battleWidth / 2, gm->battleHeight / 2, 0);
 	health = maxhealth;
 	heat = 0;
 	oneSecTimer = 0;
 	liveTimer = 0;
 	subAtkTimer = 0;
 	eisyo = 0;
-	ultPoint = 0;
+	energyPoint = 0;
 	atkTimer = 0;
 	overHeatTime = OVERHEAT_SEC;
 
@@ -301,7 +303,7 @@ void PlayerJet::update() {
 	if (gm->input->isKeyDownTrigger(KEY_INPUT_F4)) {
 		atkTimer = 100;
 		subAtkTimer = 100;
-		ultPoint += 2;
+		energyPoint += 2;
 	}
 	subAtkTimer += gm->debug->dTime;
 	oneSecTimer += gm->debug->dTime;
@@ -337,7 +339,7 @@ void PlayerJet::update() {
 		}
 		circle.pos += move*speed*1.5f;
 
-		DrawFormatString(0, gm->battleHeight - 200, 0xffffff, "%f", health);
+		
 		if (boosted) {
 
 			SetDrawBright(0, 255, 255);
@@ -357,10 +359,16 @@ void PlayerJet::update() {
 		oneSecSyori();
 		oneSecTimer = 0;
 	}
+	//体力を表示
+	DrawFormatString(0, gm->battleHeight, 0xffffff, "%f", health);
+	//鉄の数を表示
+	DrawFormatString(0,gm->battleHeight+20,0xffffff,"%d",ironsuu);
+	//energy数を表示
+	DrawFormatString(0,gm->battleHeight+40,0xffffff,"%d",energyPoint);
 	//heatを表示
 	gm->drawBar(20, 450, 200, 30, heat, maxHeat, GetColor(255, 0, 0), 0xffffff);
 	DrawFormatString(20, 500, 0xffffff, "%d/%dHEAT", (int)heat, (int)maxHeat);
-	//クリックで弾を作る処理
+	//cdを表示
 	if (nowShot[MAIN] >= 0)DrawFormatString(0, 40, 0xffffff, "メイン武器使えるまで:%f", (shotData[MAIN][nowShot[MAIN]]->shotCd - atkTimer > 0) ? shotData[MAIN][nowShot[MAIN]]->shotCd - atkTimer : 0);
 	if (nowShot[SUB] >= 0)DrawFormatString(0, 80, 0xffffff, "サブ武器使えるまで:%f", (shotData[SUB][nowShot[SUB]]->shotCd - subAtkTimer > 0) ? shotData[SUB][nowShot[SUB]]->shotCd - subAtkTimer : 0);
 
@@ -375,8 +383,8 @@ void PlayerJet::update() {
 		}
 	
 	}
-	if (ultPoint >= 2 && gm->input->isKeyDownTrigger(KEY_INPUT_R)) {
-		ultPoint = 0;
+	if (energyPoint >= 2 && gm->input->isKeyDownTrigger(KEY_INPUT_R)) {
+		energyPoint = 0;
 		jm->Ultimate(t2k::vec3(gm->cursor->mouseX,gm->cursor->mouseY,0),nowShot[ULT]);
 	}
 	gm->drawBar(0, gm->battleHeight - 50, 100, 20, health, maxhealth, GetColor(0, 255, 0), GetColor(255, 0, 0));

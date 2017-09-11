@@ -57,7 +57,13 @@ void JetManager::init() {
 	shotGfx[BOMB_ICON] = DerivationGraph(194, 170, 59, 86, c);
 	shotGfx[HOLE_ICON] = holeAnim[6];
 	shotGfx[RAZER_ICON] = LoadGraph("images/razerIcon.png");
-
+	//アイテムのグラ
+	itemGfx[IRON]=LoadGraph("images/iron.png");
+	itemGfx[ENERGY] = LoadGraph("images/energy.png");
+	itemGfx[HOUNETU] = LoadGraph("images/houneturune.png");
+	itemGfx[CD] = LoadGraph("images/cdrune.png");
+	itemGfx[SPD] = LoadGraph("images/speedrune.png");
+	itemGfx[ATK] = LoadGraph("images/attackrune.png");
 
 	DeleteGraph(a);
 	DeleteGraph(b);
@@ -73,6 +79,7 @@ JetManager::JetManager() {
 	memset(anims, 0, sizeof(anims));
 	memset(enemy, 0, sizeof(enemy));
 	memset(targetJet, 0, sizeof(targetJet));
+	memset(item,0,sizeof(item));
 	player = nullptr;
 }
 //ショットのアイコンを場所とサイズを指定して描画

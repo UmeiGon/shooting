@@ -1,7 +1,9 @@
 #pragma once
 #include "TamaJet.h"
+class Rune;
 class PlayerJet :public Jet {
 public:
+	
 	float heat;
 	float maxHeat;
 	float hounetu;
@@ -9,17 +11,19 @@ public:
 	float overHeatTime;
 	float subAtkTimer;
 	int razerNum;
-	int ultPoint;
+	int energyPoint;
+	int ironsuu;
 	bool moved;
 	float eisyo;
 	enum armtype { MAIN, SUB, ULT };
-	enum teisu { OVERHEAT_SEC = 3, MAX_ARM_SUU = 3, MAX_SHOT_TYPE = 4 ,MAX_KOKI_SUU=4};
+	enum teisu { OVERHEAT_SEC = 3, MAX_ARM_SUU = 3, MAX_SHOT_TYPE = 4 ,MAX_KOKI_SUU=4,MAX_RUNE_SUU=30};
 	enum pShotType { MAIN_FIRE, MAIN_BEAM, MAIN_BEAM2, SUB_KOKI = 0, SUB_MISSLE, SUB_BOOMERANG,SUB_RAZER, ULT_BOMB = 0, ULT_HOLE, NONE = -1 };
 	void PlayerJet::tokusyuSyori(armtype atype, pShotType type);
 	void oneSecSyori();
 	void playerInit();
 	void shotSyori();
 	void playerShotGen(armtype atype, pShotType type);
+	Rune* runes[MAX_RUNE_SUU];
 	shotd *shotData[MAX_ARM_SUU][MAX_SHOT_TYPE];
 	Bullet* koki[MAX_KOKI_SUU];
 	void shotDataSet(armtype atype, pShotType shotN);

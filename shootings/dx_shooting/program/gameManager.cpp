@@ -34,7 +34,7 @@ void GameManager::drawBar(float startX, float startY, float w, float h, int valu
 }
 void GameManager::gameInit() {
 	SetGraphMode(1920, 1080, 16, 60);
-	
+
 	ChangeWindowMode(TRUE), DxLib_Init(), SetDrawScreen(DX_SCREEN_BACK);//ウィンドウモード変更と初期化と裏画面設定
 	SetDrawMode(DX_DRAWMODE_BILINEAR);
 	//背景グラフィック
@@ -46,12 +46,12 @@ void GameManager::gameInit() {
 	UIImg[HIDARI] = LoadGraph("images/hidari.png");
 	UIImg[SHOTFLAME] = LoadGraph("images/waku01.png");
 	UIImg[ROBO_ICON] = LoadGraph("images/RoboIcon.bmp");
-	
+
 	DeleteGraph(a);
 	JetManager *jm = JetManager::getInstance();
 	scene_title = new titlescene();
 	cursor->graphInit();
-	GetWindowSize(&winWidth,&winHeight);
+	GetWindowSize(&winWidth, &winHeight);
 	GetWindowSize(&battleWidth, &battleHeight);
 	battleHeight -= UI_ZONE;
 	jm->init();
@@ -77,14 +77,18 @@ void GameManager::menuEnd() {
 	SAFE_DELETE(scene_menu);
 }
 void GameManager::playEnd() {
-	SAFE_DELETE(scene_play);	
+	SAFE_DELETE(scene_play);
 	JetManager *jm = JetManager::getInstance();
 	jm->ultActive = -1;
-	//enemyを全部デリート
-	for (int i = 0; i < JetManager::MAX_ENEMY_SUU&&jm->enemy[i]; i++) {
-		SAFE_DELETE(jm->enemy[i]);
+	for (int i = 0; i < JetManager::MAX_ITEM_SUU; i++) {
+		SAFE_DELETE(jm->item[i]);
 	}
-	
+	//enemyを全部デリート
+	for (int i = 0; i < JetManager::MAX_ENEMY_SUU; i++) {
+		if (jm->enemy[i]) {
+			SAFE_DELETE(jm->enemy[i]);
+		}
+	}
 }
 void  GameManager::resultInit(int kekka) {
 

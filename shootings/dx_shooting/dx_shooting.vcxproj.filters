@@ -75,6 +75,12 @@
     <ClCompile Include="program\playerJet.cpp">
       <Filter>ソース ファイル\program\tamajet</Filter>
     </ClCompile>
+    <ClCompile Include="program\Item.cpp">
+      <Filter>ソース ファイル\program</Filter>
+    </ClCompile>
+    <ClCompile Include="program\rune.cpp">
+      <Filter>ソース ファイル\program</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="program\keycon.h">
@@ -127,6 +133,12 @@
     </ClInclude>
     <ClInclude Include="program\playerJet.h">
       <Filter>ソース ファイル\program\tamajet</Filter>
+    </ClInclude>
+    <ClInclude Include="program\Item.h">
+      <Filter>ソース ファイル\program</Filter>
+    </ClInclude>
+    <ClInclude Include="program\rune.h">
+      <Filter>ソース ファイル\program</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
