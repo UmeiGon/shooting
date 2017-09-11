@@ -16,5 +16,5 @@ void Cursor::cursorImageInit() {
 
 }
 void Cursor::cursorDraw() {
-	DrawRotaGraph(mouseX, mouseY, 1.5, 0, Image[cNum], true);
+	DrawGraph(mouseX, mouseY, Image[cNum], true);
 }

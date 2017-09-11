@@ -1,18 +1,17 @@
 #include "TamaJet.h"
 #include "math.h"
-#include "debug.h"
 #include "gameManager.h"
 #include "Dxlib.h"
 #include "capsule.h"
-#include "cursor.h"
-#include "keycon.h"
+#include "playerJet.h"
+#include "enemyJet.h"
 #include <typeinfo.h>
 Maru::Maru(t2k::vec3 Pos, int R) {
 	pos = Pos;
 	r = R;
 }
 Maru::Maru() {}
-Tama::Tama(float X, float Y, float Angle, float Size, float Spd, int atk, int gfx, float dtimer) {
+Tama::Tama(float X, float Y, float Angle, float Size, float Spd, float atk, int gfx, float dtimer) {
 	handle = gfx;
 	deathTime = dtimer;
 	liveTimer = 0;
@@ -55,7 +54,7 @@ bool Tama::maruHantei(Maru a, Maru b) {
 	return(dis <= rad);
 }
 bool Tama::screenInside(float px, float py, float sabun) {
-	if (-sabun <= px && px <= gm->winWidth + sabun && -sabun <= py&&py <= gm->winHeight + sabun) {
+	if (-sabun <= px && px <= gm->battleWidth + sabun && -sabun <= py&&py <= gm->battleHeight + sabun) {
 		return true;
 	}
 	else {
@@ -87,12 +86,29 @@ void Tama::draw() {
 
 	}
 }
+
+
+Tama::~Tama() {
+	gm = nullptr;
+	SAFE_DELETE(capsule);
+}
+Bullet::Bullet(float X, float Y, float Angle, float Size, float Spd, float atk, int gfx, float dtimer, float katuteikati) :Tama(X, Y, Angle, Size, Spd, atk, gfx, dtimer) {
+	kantuTeika = katuteikati;
+	atkedJet = nullptr;
+	homingJet = nullptr;
+	razerTimer = -1;
+	animTimer = -1;
+}
+Bullet::~Bullet() {
+	atkedJet = nullptr;
+	homingJet = nullptr;
+}
 void Jet::drawHp(float startX, float startY, int Hp, int maxHp) {
 	gm->drawBar(startX, startY, 45, 5, Hp, maxHp, GetColor(255, 0, 0), GetColor(0, 255, 0));
 }
 //画像をの角度を調節したい時はimgAngを変更。
 //基本的な弾の発射
-void Jet::shotGenHontai(float siz, float spd, int atk, int gfx, bool hou, int tx, int ty, float dt) {
+Bullet* Jet::shotGenHontai(float siz, float spd, float atk, int gfx, bool hou, int tx, int ty, float dt, float kantuteikati) {
 	float fAng = 0;//弾の向き
 	if (tx != -1) {
 		float xsa = (tx - circle.pos.x);
@@ -110,40 +126,37 @@ void Jet::shotGenHontai(float siz, float spd, int atk, int gfx, bool hou, int tx
 	}
 	for (int i = 0; i < JetManager::MAX_SHOT_SUU; i++) {
 		if (!Shot[i]) {
-			Shot[i] = new Tama(outx, outy, fAng, siz, spd, atk, gfx, dt);
+			return Shot[i] = new Bullet(outx, outy, fAng, siz, spd, atk, gfx, dt, kantuteikati);
 			break;
 		}
 	}
 }
-void Jet::shotGen(shotd s, bool houdaiShot, int targetX, int targetY) {
-	shotGenHontai(s.size, s.speed, s.atk, s.gfx, houdaiShot, targetX, targetY, s.deathTime);
+Bullet* Jet::shotGen(shotd s, bool houdaiShot, int targetX, int targetY) {
+	return shotGenHontai(s.size, s.speed, s.atk, s.gfx, houdaiShot, targetX, targetY, s.deathTime, s.kantuTeika);
 }
-void Jet::shotGen(StandardShotTypes s, bool houdaiShot, int targetX, int targetY) {
+Bullet* Jet::shotGen(StandardShotTypes s, bool houdaiShot, int targetX, int targetY) {
 
 	JetManager* jm = JetManager::getInstance();
 	switch (s)
 	{
 	case EnemyJet::FIRE:
-		shotGenHontai(15, 10, 2, jm->shotGfx[JetManager::FIRE1], houdaiShot, targetX, targetY);
+		return shotGenHontai(15, 10, 2, jm->shotGfx[JetManager::FIRE1], houdaiShot, targetX, targetY);
 		break;
 	case EnemyJet::BEAM:
-		shotGenHontai(13, 15, 1, jm->shotGfx[JetManager::BEAM1], houdaiShot, targetX, targetY);
+		return shotGenHontai(13, 15, 1, jm->shotGfx[JetManager::BEAM1], houdaiShot, targetX, targetY);
 		break;
 	case EnemyJet::MISSILE1:
-		shotGenHontai(18, 12, 4, jm->shotGfx[JetManager::MISS1], houdaiShot, targetX, targetY);
+		return shotGenHontai(18, 12, 4, jm->shotGfx[JetManager::MISS1], houdaiShot, targetX, targetY);
 		break;
 	case EnemyJet::MISSILE2:
-		shotGenHontai(22, 2, 6, jm->shotGfx[JetManager::MISS2], houdaiShot, targetX, targetY);
+		return shotGenHontai(22, 2, 6, jm->shotGfx[JetManager::MISS2], houdaiShot, targetX, targetY);
 		break;
 	default:
 		break;
 	}
 }
 
-Tama::~Tama() {
-	gm = nullptr;
-	SAFE_DELETE(capsule);
-}
+
 
 Jet::~Jet() {
 	SAFE_DELETE(houdai);
@@ -171,58 +184,10 @@ void Jet::drawJet() {
 	if (houdai) {
 		DrawRotaGraph(circle.pos.x + houdai->x, circle.pos.y + houdai->y, houdai->gSize, houdai->angle + houdai->gAngle, houdai->img, true);
 	}
-
-	//drawHp(circle.pos.x - circle.r, circle.pos.y - circle.r, health, maxhealth);
 }
 
-void PlayerJet::tokusyuSyori(armtype atype, pShotType type) {
-	switch (atype)
-	{
-	case PlayerJet::MAIN:
-		switch (type)
-		{
-		case PlayerJet::MAIN_FIRE:
-			break;
-		case PlayerJet::MAIN_BEAM:
-			break;
-		case PlayerJet::MAIN_BEAM2:
-			break;
-		default:
-			break;
-		}
-		break;
-	case PlayerJet::SUB:
-		switch (type)
-		{
 
-		case PlayerJet::SUB_MISSILE:
-			break;
-		case PlayerJet::SUB_MISSLE2:
-			break;
-		case PlayerJet::SUB_BOOMERANG:
-			break;
-		default:
-			break;
-		}
-		break;
-	case PlayerJet::ULT:
-		switch (type)
-		{
-
-		case PlayerJet::ULT_BOMB:
-			break;
-		case PlayerJet::ULT_MISSILE:
-			break;
-		default:
-			break;
-		}
-		break;
-	default:
-		break;
-	}
-}
-
-//-1,-1,-1を返したら普通の弾,-2,-2,-2を返したらdelete弾によっては特殊処理。
+//返り値にmove値を返す。特殊弾:ちゃんとした返り値,普通の弾:-1,-1,-1の返り値,弾をデリート:-2,-2,-2の返り値。
 t2k::vec3 Jet::shotMoveTokusyu(int sn) {
 	JetManager* jm = JetManager::getInstance();
 	if (Shot[sn]->handle == jm->shotGfx[JetManager::BOOMERANG]) {
@@ -237,7 +202,7 @@ t2k::vec3 Jet::shotMoveTokusyu(int sn) {
 			}
 			if (maruHantei(Shot[sn]->circle, circle)) {
 				if (this == jm->player) {
-					jm->player->tokusyuSyori(PlayerJet::SUB,PlayerJet::SUB_BOOMERANG);
+					jm->player->tokusyuSyori(PlayerJet::SUB, PlayerJet::SUB_BOOMERANG);
 				}
 				return t2k::vec3(-2, -2, -2);
 			}
@@ -261,31 +226,101 @@ t2k::vec3 Jet::shotMoveTokusyu(int sn) {
 		return (t2k::vec3BezierSpline(Shot[sn]->startPos, Shot[sn]->startPos + t2k::vec3(300, -400, 0)*houkou, Shot[sn]->startPos + t2k::vec3(600, -700, 0)*houkou, Shot[sn]->startPos + t2k::vec3(800, 200, 0)*houkou, value) - Shot[sn]->circle.pos);
 		//x800y300
 	}
-
+	//子機特殊処理
+	if (Shot[sn]->handle == jm->shotGfx[JetManager::KOKI]) {
+		for (int i = 0; i < PlayerJet::MAX_KOKI_SUU; i++) {
+			if (Shot[sn] == jm->player->koki[i]) {
+				t2k::vec3 mov = t2k::vec3(circle.pos.x + 40 * cos(MY_PI / 2 * i + liveTimer *4.5f), circle.pos.y + 40 * sin(MY_PI / 2 * i + liveTimer *4.5f), 0) - Shot[sn]->circle.pos;
+				Shot[sn]->angle = atan2(mov.y, mov.x);
+				return mov;
+			}
+		}
+	}
+	//ホーミング特殊処理
+	if (Shot[sn]->homingJet) {
+		t2k::vec3 e = Shot[sn]->homingJet->circle.pos;
+		DrawRotaGraph(e.x, e.y, 1.0, 0, jm->gfx[JetManager::TARGET], true);
+		t2k::vec3 at = Shot[sn]->homingJet->circle.pos - Shot[sn]->circle.pos;
+		Shot[sn]->angle = atan2(at.y, at.x);
+		at = t2k::vec3Normalize(at);
+		return at*Shot[sn]->speed * 50 * gm->debug->dTime;
+	}
+	//レーザー特殊処理
+	if (Shot[sn]->razerTimer >= 0) {
+		Shot[sn]->razerTimer += gm->debug->dTime;
+		DrawFormatString(0, 0, 0xffffff, "%f", Shot[sn]->razerTimer);
+	}
+	if (Shot[sn]->animTimer >= 0) {
+		Shot[sn]->animTimer += gm->debug->dTime;
+		if (Shot[sn]->animTimer > 0.13f) {
+			for (int i = 0; i < jm->RAZER_ANIM_SUU; i++) {
+				if (Shot[sn]->handle == jm->razerAnim[i]) {
+					if (i == jm->RAZER_ANIM_SUU - 1) {
+						Shot[sn]->animTimer = -1;
+						break;
+					}
+					Shot[sn]->handle = jm->razerAnim[i + 1];
+					Shot[sn]->animTimer = 0;
+					break;
+				}
+			}
+		}
+	}
 	return t2k::vec3(-1, -1, -1);
 }
+
+
+
 void Jet::drawMoveShot(int shotN) {
+	//デスタイムが設定してあるor画面内で弾処理
 	if (screenInside(Shot[shotN]->circle.pos.x, Shot[shotN]->circle.pos.y, Shot[shotN]->size) || Shot[shotN]->deathTime > 0) {
-		//画面内の時の処理
 
 		t2k::vec3 move = shotMoveTokusyu(shotN);
-		if (move == t2k::vec3(-1, -1, -1)) {
-			move = t2k::vec3(cos(Shot[shotN]->angle), sin(Shot[shotN]->angle), 0)* Shot[shotN]->speed * 100 * gm->debug->dTime;
-		}
+		//デスタイムを超過または-2の返り値でデリート
 		if (move == t2k::vec3(-2, -2, -2) || 0 < Shot[shotN]->deathTime&&Shot[shotN]->deathTime < Shot[shotN]->liveTimer) {
 			SAFE_DELETE(Shot[shotN]);
 		}
 		else {
-			Shot[shotN]->circle.pos += move;
-			Shot[shotN]->capTuizyu(move, true);
-			Shot[shotN]->draw();
-			gm->debug->objSuu++;
+			if (move == t2k::vec3(-1, -1, -1)) {
+				move = t2k::vec3(cos(Shot[shotN]->angle), sin(Shot[shotN]->angle), 0)* Shot[shotN]->speed * 100 * gm->debug->dTime;
+			}
+			JetManager* jm = JetManager::getInstance();
+			switch (jm->ultActive)
+			{
+			case PlayerJet::ULT_BOMB:
+				if (this != jm->player) {
+					SAFE_DELETE(Shot[shotN]);
+				}
+				break;
+			case PlayerJet::ULT_HOLE:
+				if (this != jm->player) {
+					if (t2k::vec3Distance(jm->ultpos, Shot[shotN]->circle.pos) < 3.0f) {
+						SAFE_DELETE(Shot[shotN])
+							break;
+					}
+					move = jm->ultpos - Shot[shotN]->circle.pos;
+					move = t2k::vec3Normalize(move);
+					move *= 400 * gm->debug->dTime;
+				}
+				break;
+			default:
+				break;
+			}
+			if (Shot[shotN]) {
+				Shot[shotN]->circle.pos += move;
+				Shot[shotN]->capTuizyu(move, true);
+				Shot[shotN]->draw();
+				gm->debug->objSuu++;
+			}
 		}
 	}
 	else {
 		SAFE_DELETE(Shot[shotN])
 	}
 }
+
+
+//カプセルをムーブに追従させる。
 void Tama::capTuizyu(t2k::vec3 Move, bool spined) {
 	if (!capsule)return;
 	capsule->a += Move;
@@ -298,152 +333,10 @@ void Tama::capTuizyu(t2k::vec3 Move, bool spined) {
 	}
 
 }
-void EnemyJet::eneMove() {
-	t2k::vec3 move;
-	speed = gm->debug->dTime * 10;
-	bool spined = false;
-	switch (moveType)
-	{
-	case 0:
-		//pos = t2k::vec3(x0 + r*cos(Timer * 5), y0 + r*sin(Timer * 5), 0);
-		break;
-	case 1:
-		move = t2k::vec3(-speed, -speed / 2, 0);
-		circle.pos += move;
-		angle += gm->debug->dTime;
-		spined = true;
-		break;
-	default:
-		break;
-	}
-	if (capsule) {
-		capTuizyu(move, spined);
-		//回転テスト
-	}
-
-};
-EnemyJet::EnemyJet(float X, float Y, float Angle, float Size, float Spd, float Health, float As, int gfx, float sT, float dT) :Jet(X, Y, Angle, Size, Spd, Health, As, gfx, dT) {
-	x0 = X;
-	y0 = Y;
-	spawnTimer = sT;
-	moveType = NANAME;
-}
-
-PlayerJet::PlayerJet(float X, float Y, float Angle, float Size, float Spd, float Health, float As, int gfx) : Jet(X, Y, Angle, Size, Spd, Health, As, gfx, 0)
-{
-	heat = 0;
-	maxHeat = 100;
-	hounetu = 0.5f;
-	oneSecTimer = 0;
-	overHeatTime = OVERHEAT_SEC;
-	subAtkTimer = 0;
-	memset(shotData, 0, sizeof(shotData));
-	shotDataSet(MAIN, MAIN_FIRE);
-	shotDataSet(SUB, SUB_MISSILE);
-	shotDataSet(MAIN, MAIN_BEAM);
-	shotDataSet(SUB, SUB_BOOMERANG);
-	nowShot[MAIN] = MAIN_FIRE;
-	nowShot[SUB] = SUB_MISSILE;
-	nowShot[ULT] = NONE;
-
-}
 
 
-void PlayerJet::playerShotGen(armtype atype, pShotType type) {
-	heat += shotData[atype][type]->shotHeat;
-	if (atype == MAIN) {
-		shotGen(*shotData[atype][type]);
-	}
-	else if (atype == SUB)
-	{
-		shotGen(*shotData[atype][type], true, gm->cursor->mouseX, gm->cursor->mouseY);
-	}
-	else {
-	}
-	//特殊処理
-	switch (atype)
-	{
-	case PlayerJet::MAIN:
-		switch (type)
-		{
-		case PlayerJet::MAIN_FIRE:
-			//3WAY
-			if (heat > 60) {
-				shotGen(*shotData[atype][type], false, circle.pos.x + 100, circle.pos.y - 10);
-				shotGen(*shotData[atype][type], false, circle.pos.x + 100, circle.pos.y + 10);
-			}
-			break;
-		case PlayerJet::MAIN_BEAM:
-			break;
-		case PlayerJet::MAIN_BEAM2:
-			break;
-		default:
-			break;
-		}
-		break;
-	case PlayerJet::SUB:
-		switch (type)
-		{
-
-		case PlayerJet::SUB_MISSILE:
-			break;
-		case PlayerJet::SUB_MISSLE2:
-			break;
-		case PlayerJet::SUB_BOOMERANG:
-			break;
-		default:
-			break;
-		}
-		break;
-	case PlayerJet::ULT:
-		switch (type)
-		{
-		case PlayerJet::ULT_BOMB:
-			break;
-		case PlayerJet::ULT_MISSILE:
-			break;
-		default:
-			break;
-		}
-		break;
-	default:
-		break;
-	}
-}
-void PlayerJet::oneSecSyori() {
-	if (heat > 0 && overHeatTime == OVERHEAT_SEC) {
-		heat -= hounetu;
-	}
-
-}
-void PlayerJet::playerInit() {
-	for (int s = 0; s < JetManager::MAX_SHOT_SUU; s++) {
-		SAFE_DELETE(Shot[s]);
-	}
-	circle.pos = t2k::vec3(gm->winWidth / 2, gm->winWidth / 2, 0);
-	health = maxhealth;
-	heat = 0;
-	oneSecTimer = 0;
-	liveTimer = 0;
-	subAtkTimer = 0;
-	atkTimer = 0;
-	overHeatTime = OVERHEAT_SEC;
-
-}
-
-
-void PlayerJet::shotSyori() {
-	if (GetMouseInput()&MOUSE_INPUT_LEFT&&atkTimer >= shotData[MAIN][nowShot[MAIN]]->shotCd) {
-		playerShotGen(MAIN, nowShot[MAIN]);
-		atkTimer = 0;
-	}
-	if (heat < 100 && gm->input->isMouseDownTrigger(MOUSE_INPUT_RIGHT) && subAtkTimer >= shotData[SUB][nowShot[SUB]]->shotCd) {
-		playerShotGen(SUB, nowShot[SUB]);
-		subAtkTimer = 0;
-	}
-	int a = 0;
-}
-shotd::shotd(float Siz, float Spd, int Atk, float Cd, float Heat, int Gfx, float dt) {
+shotd::shotd(float Siz, float Spd, float Atk, float Cd, float Heat, int Gfx, float dt, float kantuteikati) {
+	kantuTeika = kantuteikati;
 	size = Siz;
 	speed = Spd;
 	atk = Atk;
@@ -452,133 +345,4 @@ shotd::shotd(float Siz, float Spd, int Atk, float Cd, float Heat, int Gfx, float
 	gfx = Gfx;
 	deathTime = dt;
 }
-//playerのshotdataに中身を入れる。・・・メモリ節約のため
-void PlayerJet::shotDataSet(armtype atype, pShotType shotN) {
-	if (shotData[atype][shotN])return;
-	JetManager* jm = JetManager::getInstance();
-	switch (atype)
-	{
-	case PlayerJet::MAIN:
-		switch (shotN)
-		{
-		case PlayerJet::MAIN_FIRE:
-			shotData[MAIN][shotN] = new shotd(15, 10, 5, 0.2f, 0.5f, jm->shotGfx[JetManager::FIRE1]);
-			break;
-		case PlayerJet::MAIN_BEAM:
-			shotData[MAIN][shotN] = new shotd(5, 12, 1.2f, 0.1f, 0.25f, jm->shotGfx[JetManager::BEAM1]);
-			break;
-		case PlayerJet::MAIN_BEAM2:
-			shotData[MAIN][shotN] = new shotd(3, 20, 0.2f, 0.05f, 0.15f, jm->shotGfx[JetManager::BEAM2]);
-			break;
-		default:
-			break;
-		}
-		break;
-	case PlayerJet::SUB:
-		switch (shotN)
-		{
 
-		case PlayerJet::SUB_MISSILE:
-			shotData[SUB][shotN] = new shotd(10, 14, 6, 6.0f, 4.0f, jm->shotGfx[JetManager::MISS1]);
-			break;
-		case PlayerJet::SUB_MISSLE2:
-			shotData[SUB][shotN] = new shotd(12, 8, 15, 15.0f, 10.0f, jm->shotGfx[JetManager::MISS2]);
-			break;
-		case PlayerJet::SUB_BOOMERANG:
-			shotData[SUB][shotN] = new shotd(50, 3, 10, 10.0f, 3.0f, jm->shotGfx[JetManager::BOOMERANG], 6.0f);
-			break;
-		default:
-			break;
-		}
-		break;
-	case PlayerJet::ULT:
-		switch (shotN)
-		{
-
-		case PlayerJet::ULT_BOMB:
-			break;
-		case PlayerJet::ULT_MISSILE:
-			break;
-		default:
-			break;
-		}
-		break;
-	default:
-		break;
-	}
-}
-void PlayerJet::update() {
-	JetManager* jm = JetManager::getInstance();
-	//1秒毎の処理
-	subAtkTimer += gm->debug->dTime;
-	oneSecTimer += gm->debug->dTime;
-	if (oneSecTimer > 1.0f) {
-		oneSecSyori();
-		oneSecTimer = 0;
-	}
-
-	//heatを表示
-	gm->drawBar(20, 450, 200, 30, heat, maxHeat, GetColor(255, 0, 0), 0xffffff);
-	DrawFormatString(20, 500, 0xffffff, "%d/%dHEAT", (int)heat, (int)maxHeat);
-	//クリックで弾を作る処理
-	if (nowShot[MAIN] >= 0)DrawFormatString(0, 40, 0xffffff, "メイン武器使えるまで:%f", (shotData[MAIN][nowShot[MAIN]]->shotCd - atkTimer > 0) ? shotData[MAIN][nowShot[MAIN]]->shotCd - atkTimer : 0);
-	if (nowShot[SUB] >= 0)DrawFormatString(0, 80, 0xffffff, "サブ武器使えるまで:%f", (shotData[SUB][nowShot[SUB]]->shotCd - subAtkTimer > 0) ? shotData[SUB][nowShot[SUB]]->shotCd - subAtkTimer : 0);
-	if (heat < 100) {
-		shotSyori();
-	}
-	else {//オーバーヒート処理
-		overHeatTime -= gm->debug->dTime;
-		DrawFormatString(20, 400, GetColor(255, 0, 0), "OVERHEAT!");
-		if (overHeatTime <= 0) {
-			heat = 0;
-			overHeatTime = OVERHEAT_SEC;
-		}
-	}
-	//動く処理
-	speed = 180 * gm->debug->dTime;
-	bool boosted = false;
-	if (heat < 100 && CheckHitKey(KEY_INPUT_LSHIFT)) {
-		speed *= 2;
-		boosted = true;
-		heat += 0.05f;
-	}
-
-	t2k::vec3 move(0, 0, 0);
-	if (CheckHitKey(KEY_INPUT_A) && 0 < circle.pos.x) {
-		move.x = -1;
-	}
-	else if (CheckHitKey(KEY_INPUT_D) && gm->winWidth > circle.pos.x) {
-		move.x = 1;
-	}
-	if (CheckHitKey(KEY_INPUT_W) && 0 < circle.pos.y) {
-		move.y = -1;
-	}
-	else if (CheckHitKey(KEY_INPUT_S) && gm->winHeight > circle.pos.y) {
-		move.y = 1;
-	}
-
-	moved = false;
-	if (!(move == t2k::vec3(0, 0, 0)))moved = true;
-	t2k::vec3Normalize(move);
-	circle.pos += move*speed;
-	gm->drawBar(0, gm->winHeight - 50, 100, 20, health, maxhealth, GetColor(0, 255, 0), GetColor(255, 0, 0));
-	if (boosted) {
-		SetDrawBlendMode(DX_BLENDMODE_ALPHA, 128);
-		for (int i = 1; i <= 3; i++) {
-			DrawRotaGraph(circle.pos.x - move.x*speed * i, circle.pos.y - move.y*speed * i, graphSize, angle, jm->gfx[JetManager::ZIKI_JET], true);
-		}
-		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
-	}
-	if (capsule) {
-		capTuizyu(move*speed, false);
-	}
-
-	drawJet();
-
-	if (moved) {
-		SetDrawBlendMode(DX_BLENDMODE_ADD, 255);
-		DrawRotaGraph(circle.pos.x - 20, circle.pos.y + 5, 1, MY_PI / 2 + MY_PI / 8, jm->gfx[JetManager::BOOST], true);
-		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
-	}
-
-}

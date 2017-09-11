@@ -47,25 +47,38 @@ int Capsule::senbunKyori(Capsule cap1, Capsule cap2) {
 	return kouho[0];
 }
 bool Capsule::kousahantei(Capsule cap1, Capsule cap2) {
-	t2k::vec3 vecCD = cap2.b - cap2.a;
-	t2k::vec3 vecAB = cap1.b - cap1.a;
-	t2k::vec3 vecHou(-vecAB.y, vecAB.x, 0);
-	t2k::vec3 taniVecHou = t2k::vec3Normalize(vecHou);
-	float d = -(cap1.a.x*taniVecHou.x + cap1.a.y*taniVecHou.y);//点Dと線ABの距離。
-	float t = -(taniVecHou.x*cap2.a.x + taniVecHou.y*cap2.a.y + d) / (taniVecHou.x*vecCD.x + taniVecHou.y*vecCD.y);
-	if (!(0 < t&&t <= 1))return false;
-	t2k::vec3 kouten(cap2.a.x + vecCD.x*t, cap2.a.y + vecCD.y*t, 0);
-	t2k::vec3 kouA = kouten - cap1.a;
-	t2k::vec3 kouB = kouten - cap1.b;
-	float nai = kouA.x*kouB.x + kouA.y*kouB.y;
-	if (0 <= nai)return false;
-	return true;
+	int ax = cap1.a.x;
+	int ay = cap1.a.y;
+	int bx = cap1.b.x;
+	int by = cap1.b.y;
+	int cx = cap2.a.x;
+	int cy = cap2.a.y;
+	int dx = cap2.b.x;
+	int dy = cap2.b.y;
+	int ta = (cx - dx) * (ay - cy) + (cy - dy) * (cx - ax);
+	int  tb = (cx - dx) * (by - cy) + (cy - dy) * (cx - bx);
+	int tc = (ax - bx) * (cy - ay) + (ay - by) * (ax - cx);
+	int  td = (ax - bx) * (dy - ay) + (ay - by) * (ax - dx);
+
+	return tc * td < 0 && ta * tb < 0;
+	////法線
+	//t2k::vec3 vecHou(-vecAB.y, vecAB.x, 0);
+	//t2k::vec3 taniVecHou = t2k::vec3Normalize(vecHou);
+	//float d = -(cap1.a.x*taniVecHou.x + cap1.a.y*taniVecHou.y);//点Dと線ABの距離。
+	//float t = -(taniVecHou.x*cap2.a.x + taniVecHou.y*cap2.a.y + d) / (taniVecHou.x*vecCD.x + taniVecHou.y*vecCD.y);
+	//if (!(0 < t&&t <= 1))return false;
+	//t2k::vec3 kouten(cap2.a.x + vecCD.x*t, cap2.a.y + vecCD.y*t, 0);
+	//t2k::vec3 kouA = kouten - cap1.a;
+	//t2k::vec3 kouB = kouten - cap1.b;
+	//float nai = kouA.x*kouB.x + kouA.y*kouB.y;
+	//if (0 <= nai)return false;
+	//return true;
 }
 bool Capsule::capsuleHantei(Capsule cap1, Capsule cap2)
 {
 
 	int n = senbunKyori(cap1, cap2);
-	bool kousa=false;
+	bool kousa = false;
 	if (cap2.a != cap2.b) {
 		int n2 = senbunKyori(cap2, cap1);
 		if (n > n2)n = n2;
@@ -76,10 +89,10 @@ bool Capsule::capsuleHantei(Capsule cap1, Capsule cap2)
 	}
 	return false;
 }
-bool Capsule::capmaruHantei(Capsule cap, t2k::vec3 point,int R) {
+bool Capsule::capmaruHantei(Capsule cap, t2k::vec3 point, int R) {
 	return capsuleHantei(cap, Capsule(point, point, R));
 }
-void Capsule::testCap(Capsule* cap1, Capsule* cap2,t2k::vec3 *point,int R) {
+void Capsule::testCap(Capsule* cap1, Capsule* cap2, t2k::vec3 *point, int R) {
 	GameManager* gm = GameManager::getInstance();
 	cap1->a.x = gm->cursor->mouseX;
 	cap1->a.y = gm->cursor->mouseY;
@@ -92,7 +105,7 @@ void Capsule::testCap(Capsule* cap1, Capsule* cap2,t2k::vec3 *point,int R) {
 			DrawString(0, 20, "当たっている", 0xfffffff);
 		}
 	}
-	else if(capsuleHantei(*cap1,*cap2)) {
+	else if (capsuleHantei(*cap1, *cap2)) {
 		DrawString(0, 20, "当たっている", 0xfffffff);
 	}
 }

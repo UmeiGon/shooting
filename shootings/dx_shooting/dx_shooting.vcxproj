@@ -22,12 +22,13 @@
     <ClCompile Include="program\Animation.cpp" />
     <ClCompile Include="program\capsule.cpp" />
     <ClCompile Include="program\cursor.cpp" />
+    <ClCompile Include="program\enemyJet.cpp" />
     <ClCompile Include="program\inputBox.cpp" />
+    <ClCompile Include="program\playerJet.cpp" />
     <ClCompile Include="program\scene\menuScene.cpp" />
     <ClCompile Include="program\scene\resultScene.cpp" />
     <ClCompile Include="program\scene\titleScene.cpp" />
     <ClCompile Include="program\debug.cpp" />
-    <ClCompile Include="program\gameInit.cpp" />
     <ClCompile Include="program\gamemain.cpp" />
     <ClCompile Include="program\gameManager.cpp" />
     <ClCompile Include="program\jetManager.cpp" />
@@ -41,17 +42,22 @@
     <ClInclude Include="program\capsule.h" />
     <ClInclude Include="program\cursor.h" />
     <ClInclude Include="program\debug.h" />
-    <ClInclude Include="program\gameInit.h" />
+    <ClInclude Include="program\enemyJet.h" />
     <ClInclude Include="program\gameManager.h" />
     <ClInclude Include="program\inputBox.h" />
     <ClInclude Include="program\jetManager.h" />
     <ClInclude Include="program\keycon.h" />
+    <ClInclude Include="program\playerJet.h" />
     <ClInclude Include="program\scene\menuScene.h" />
     <ClInclude Include="program\scene\playScene.h" />
     <ClInclude Include="program\scene\resultScene.h" />
     <ClInclude Include="program\scene\titleScene.h" />
     <ClInclude Include="program\TamaJet.h" />
     <ClInclude Include="program\vec3.h" />
+    <ClInclude Include="resource.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Resource.rc" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>

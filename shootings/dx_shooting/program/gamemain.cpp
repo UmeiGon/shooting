@@ -1,6 +1,5 @@
 #include <DxLib.h>
 #include <math.h>
-#include "gameinit.h"
 #include "gameManager.h"
 #include "scene/playScene.h"
 #include "scene/titleScene.h"
@@ -15,14 +14,15 @@
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	GameManager *gm = GameManager::getInstance();
 	JetManager *jm = JetManager::getInstance();
-	gameInit();
+	gm->gameInit();
 	//–ˆƒtƒŒ[ƒ€ˆ—
 	while (ScreenFlip() == 0 && ProcessMessage() == 0 && ClearDrawScreen() == 0) {
 		gm->input->keyDownCheck();
 		gm->input->mouseDownCheck();
+		gm->cursor->cNum = Cursor::def;
 		gm->debug->objSuu = 0;
 		GetMousePoint(&gm->cursor->mouseX, &gm->cursor->mouseY);
-		jm->animationUpdate();
+		
 		switch (gm->gameScene)
 		{
 		case GameManager::init:
@@ -76,8 +76,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		default:
 			break;
 		}
-
-		DrawRotaGraph(gm->cursor->mouseX, gm->cursor->mouseY, 1.0, 0, gm->cursor->Image[Cursor::def], true);
+		jm->animationUpdate();
+		gm->cursor->cursorDraw();
 		if (gm->input->isKeyDownTrigger(KEY_INPUT_F3))gm->debug->showDebug = !gm->debug->showDebug;
 		gm->debug->update();
 	}
