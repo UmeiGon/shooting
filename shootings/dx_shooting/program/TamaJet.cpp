@@ -53,6 +53,7 @@ bool Tama::maruHantei(Maru a, Maru b) {
 	int rad = a.r + b.r;
 	return(dis <= rad);
 }
+//‰æ–Ê“à‚É‚¢‚½‚çtrue‚ð•Ô‚·B
 bool Tama::screenInside(float px, float py, float sabun) {
 	if (-sabun <= px && px <= gm->battleWidth + sabun && -sabun <= py&&py <= gm->battleHeight + sabun) {
 		return true;
@@ -60,7 +61,6 @@ bool Tama::screenInside(float px, float py, float sabun) {
 	else {
 		return false;
 	}
-	return false;
 }
 void Tama::LINE(t2k::vec3 a, t2k::vec3 b, int col) {
 	DrawLine(a.x, a.y, b.x, b.y, col);
@@ -160,8 +160,10 @@ Bullet* Jet::shotGen(StandardShotTypes s, bool houdaiShot, int targetX, int targ
 
 Jet::~Jet() {
 	SAFE_DELETE(houdai);
-	for (int i = 0; i < JetManager::MAX_SHOT_SUU&&Shot[i]; i++) {
+	for (int i = 0; i < JetManager::MAX_SHOT_SUU; i++) {
+		if (Shot[i]) {
 		SAFE_DELETE(Shot[i]);
+		}
 	}
 }
 void Jet::addHoudai(int plusX, int plusY, float ang, int img, float hsize, float gAng) {
