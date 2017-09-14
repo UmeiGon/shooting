@@ -27,6 +27,7 @@
     <ClCompile Include="program\Item.cpp" />
     <ClCompile Include="program\playerJet.cpp" />
     <ClCompile Include="program\rune.cpp" />
+    <ClCompile Include="program\save.cpp" />
     <ClCompile Include="program\scene\menuScene.cpp" />
     <ClCompile Include="program\scene\resultScene.cpp" />
     <ClCompile Include="program\scene\titleScene.cpp" />
@@ -52,6 +53,7 @@
     <ClInclude Include="program\keycon.h" />
     <ClInclude Include="program\playerJet.h" />
     <ClInclude Include="program\rune.h" />
+    <ClInclude Include="program\save.h" />
     <ClInclude Include="program\scene\menuScene.h" />
     <ClInclude Include="program\scene\playScene.h" />
     <ClInclude Include="program\scene\resultScene.h" />

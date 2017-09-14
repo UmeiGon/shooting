@@ -304,7 +304,7 @@ void boxUpdateDainyu(NumberInputFlame *pnumbox) {
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	Cursor* cursor = Cursor::getInstance();
 	keymouseInput* input = keymouseInput::getInstance();
-	SetGraphMode(1200, 800, 16, 60);
+	SetGraphMode(1200, 1000, 16, 60);
 	ChangeWindowMode(TRUE), DxLib_Init(), SetDrawScreen(DX_SCREEN_BACK);
 	img[0] = LoadGraph("../dx_shooting/images/plus.png", FALSE);
 	img[1] = LoadGraph("../dx_shooting/images/batu.png", FALSE);

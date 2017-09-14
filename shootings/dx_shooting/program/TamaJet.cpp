@@ -110,6 +110,7 @@ void Jet::drawHp(float startX, float startY, int Hp, int maxHp) {
 //基本的な弾の発射
 Bullet* Jet::shotGenHontai(float siz, float spd, float atk, int gfx, bool hou, int tx, int ty, float dt, float kantuteikati) {
 	float fAng = 0;//弾の向き
+	//放題があると向きと出る場所が若干変わる
 	if (tx != -1) {
 		float xsa = (tx - circle.pos.x);
 		float ysa = (ty - circle.pos.y);
@@ -150,6 +151,12 @@ Bullet* Jet::shotGen(StandardShotTypes s, bool houdaiShot, int targetX, int targ
 		break;
 	case EnemyJet::MISSILE2:
 		return shotGenHontai(22, 2, 6, jm->shotGfx[JetManager::MISS2], houdaiShot, targetX, targetY);
+		break;
+	case  KI:
+		return shotGenHontai(30,6,1.5f,jm->shotGfx[JetManager::KI],houdaiShot,targetX,targetY);
+		break;
+	case RICE:
+		return shotGenHontai(10, 10, 0.8f, jm->shotGfx[JetManager::RICE], houdaiShot, targetX, targetY);
 		break;
 	default:
 		break;
@@ -239,7 +246,7 @@ t2k::vec3 Jet::shotMoveTokusyu(int sn) {
 		}
 	}
 	//ホーミング特殊処理
-	if (Shot[sn]->homingJet) {
+	if (Shot[sn]->homingJet&&Shot[sn]->homingJet->circle.pos.x>0) {
 		t2k::vec3 e = Shot[sn]->homingJet->circle.pos;
 		DrawRotaGraph(e.x, e.y, 1.0, 0, jm->gfx[JetManager::TARGET], true);
 		t2k::vec3 at = Shot[sn]->homingJet->circle.pos - Shot[sn]->circle.pos;
@@ -275,7 +282,12 @@ t2k::vec3 Jet::shotMoveTokusyu(int sn) {
 
 void Jet::drawMoveShot(int shotN) {
 	//デスタイムが設定してあるor画面内で弾処理
-	if (screenInside(Shot[shotN]->circle.pos.x, Shot[shotN]->circle.pos.y, Shot[shotN]->size) || Shot[shotN]->deathTime > 0) {
+	bool kokib=false;
+	JetManager* jm = JetManager::getInstance();
+	for (int i = 0; i < PlayerJet::MAX_KOKI_SUU; i++) {
+		if (jm->player->koki[i] && jm->player->koki[i] == Shot[shotN])kokib=true;
+	}
+	if (screenInside(Shot[shotN]->circle.pos.x, Shot[shotN]->circle.pos.y, Shot[shotN]->size) || Shot[shotN]->deathTime > 0||kokib) {
 
 		t2k::vec3 move = shotMoveTokusyu(shotN);
 		//デスタイムを超過または-2の返り値でデリート
@@ -286,7 +298,6 @@ void Jet::drawMoveShot(int shotN) {
 			if (move == t2k::vec3(-1, -1, -1)) {
 				move = t2k::vec3(cos(Shot[shotN]->angle), sin(Shot[shotN]->angle), 0)* Shot[shotN]->speed * 100 * gm->debug->dTime;
 			}
-			JetManager* jm = JetManager::getInstance();
 			switch (jm->ultActive)
 			{
 			case PlayerJet::ULT_BOMB:
@@ -296,7 +307,7 @@ void Jet::drawMoveShot(int shotN) {
 				break;
 			case PlayerJet::ULT_HOLE:
 				if (this != jm->player) {
-					if (t2k::vec3Distance(jm->ultpos, Shot[shotN]->circle.pos) < 3.0f) {
+					if (t2k::vec3Distance(jm->ultpos, Shot[shotN]->circle.pos) < 6.5f) {
 						SAFE_DELETE(Shot[shotN])
 							break;
 					}
@@ -317,6 +328,8 @@ void Jet::drawMoveShot(int shotN) {
 		}
 	}
 	else {
+		
+	
 		SAFE_DELETE(Shot[shotN])
 	}
 }
@@ -337,7 +350,7 @@ void Tama::capTuizyu(t2k::vec3 Move, bool spined) {
 }
 
 
-shotd::shotd(float Siz, float Spd, float Atk, float Cd, float Heat, int Gfx, float dt, float kantuteikati) {
+shotd::shotd(float Siz, float Spd, float Atk, float Cd, float Heat, int Gfx,int Iron, float dt,float kantuteikati) {
 	kantuTeika = kantuteikati;
 	size = Siz;
 	speed = Spd;
@@ -345,6 +358,7 @@ shotd::shotd(float Siz, float Spd, float Atk, float Cd, float Heat, int Gfx, flo
 	shotCd = Cd;
 	shotHeat = Heat;
 	gfx = Gfx;
+	hituIron = Iron;
 	deathTime = dt;
 }
 

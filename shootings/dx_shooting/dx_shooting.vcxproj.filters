@@ -81,6 +81,9 @@
     <ClCompile Include="program\rune.cpp">
       <Filter>ソース ファイル\program</Filter>
     </ClCompile>
+    <ClCompile Include="program\save.cpp">
+      <Filter>ソース ファイル\program</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="program\keycon.h">
@@ -138,6 +141,9 @@
       <Filter>ソース ファイル\program</Filter>
     </ClInclude>
     <ClInclude Include="program\rune.h">
+      <Filter>ソース ファイル\program</Filter>
+    </ClInclude>
+    <ClInclude Include="program\save.h">
       <Filter>ソース ファイル\program</Filter>
     </ClInclude>
   </ItemGroup>

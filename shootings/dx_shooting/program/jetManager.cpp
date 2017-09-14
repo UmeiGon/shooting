@@ -6,6 +6,7 @@
 #include "debug.h"
 #include "Animation.h"
 #include "Dxlib.h"
+#include "scene/playScene.h"
 #include "Capsule.h"
 JetManager* JetManager::getInstance() {
 	static JetManager* instance = nullptr;
@@ -33,6 +34,10 @@ void JetManager::init() {
 	gfx[ENEMY_HOUDAI] = DerivationGraph(313, 272, 77, 54, gfx[ENEMY_ZENTAI]);
 	gfx[ENEMY_JET_TYPE1] = DerivationGraph(163, 72, 108, 42, gfx[ENEMY_ZENTAI]);
 	gfx[TARGET] = LoadGraph("images/target.png");
+	gfx[ENEMY_JET_TYPE2] = LoadGraph("images/enemy2.png");
+	gfx[ENEMY_JET_TYPE3] = LoadGraph("images/enemy3.png");
+	gfx[ENEMY_JET_TYPE4] = LoadGraph("images/enemy4.png");
+	gfx[ENEMY_JET_TYPE5] = LoadGraph("images/enemy5.png");
 	//アニメーショングラ
 	LoadDivGraph("images/bakuhatsu01.png", 12, 3, 4, 64, 64, bomAnim);
 	LoadDivGraph("images/zangeki.png", 9, 9, 1, 120, 120, zangekiAnim);
@@ -57,13 +62,15 @@ void JetManager::init() {
 	shotGfx[BOMB_ICON] = DerivationGraph(194, 170, 59, 86, c);
 	shotGfx[HOLE_ICON] = holeAnim[6];
 	shotGfx[RAZER_ICON] = LoadGraph("images/razerIcon.png");
+	shotGfx[KI] = LoadGraph("images/blueshot.png");
+	shotGfx[RICE] = DerivationGraph(66, 150, 12, 5, c);
 	//アイテムのグラ
-	itemGfx[IRON]=LoadGraph("images/iron.png");
+	itemGfx[IRON] = LoadGraph("images/iron.png");
 	itemGfx[ENERGY] = LoadGraph("images/energy.png");
-	itemGfx[HOUNETU] = LoadGraph("images/houneturune.png");
-	itemGfx[CD] = LoadGraph("images/cdrune.png");
-	itemGfx[SPD] = LoadGraph("images/speedrune.png");
-	itemGfx[ATK] = LoadGraph("images/attackrune.png");
+	itemGfx[HOUNETU_GFX] = LoadGraph("images/houneturune.png");
+	itemGfx[CD_GFX] = LoadGraph("images/cdrune.png");
+	itemGfx[SPD_GFX] = LoadGraph("images/speedrune.png");
+	itemGfx[ATK_GFX] = LoadGraph("images/attackrune.png");
 
 	DeleteGraph(a);
 	DeleteGraph(b);
@@ -79,7 +86,7 @@ JetManager::JetManager() {
 	memset(anims, 0, sizeof(anims));
 	memset(enemy, 0, sizeof(enemy));
 	memset(targetJet, 0, sizeof(targetJet));
-	memset(item,0,sizeof(item));
+	memset(item, 0, sizeof(item));
 	player = nullptr;
 }
 //ショットのアイコンを場所とサイズを指定して描画
@@ -95,7 +102,7 @@ void JetManager::shotIconDraw(int fx, int fy, int armtype, int type, int fsize) 
 	float drawsize;
 	GetGraphSize(sgfx, &a, &b);
 	int s = a > b ? a : b;
-	drawsize = (float)fsize / ((float)s+12.0f);
+	drawsize = (float)fsize / ((float)s + 12.0f);
 	DrawRotaGraph(fx + fsize / 2, fy + fsize / 2, drawsize, 0, sgfx, true);
 }
 void JetManager::animationUpdate() {
@@ -165,7 +172,7 @@ void JetManager::UltimateUpdate() {
 	{
 	case PlayerJet::ULT_BOMB:
 		if (ultLiveTimer == 0) {
-			animStart(t2k::vec3(gm->battleWidth / 2, gm->battleHeight, 0), ultbom1Anim, 3.0f);
+			animStart(t2k::vec3(gm->battleWidth / 2, gm->battleHeight - 250, 0), ultbom1Anim, 3.0f);
 		}
 		ultLiveTimer += gm->debug->dTime;
 		ultAtkTimer += gm->debug->dTime;
@@ -179,7 +186,7 @@ void JetManager::UltimateUpdate() {
 			ultAtkTimer = 0;
 		}
 		if (animtimer >= 0.5f) {
-			animStart(t2k::vec3(gm->battleWidth / 2, gm->battleHeight - animnum*300.0f, 0), ultbom2Anim, 3.0f);
+			animStart(t2k::vec3(gm->battleWidth / 2, gm->battleHeight - 250 - animnum*300.0f, 0), ultbom2Anim, 3.0f);
 			animnum++;
 			animtimer = 0;
 		}
@@ -211,6 +218,115 @@ void JetManager::UltimateUpdate() {
 		animnum = 0;
 		break;
 	}
+}
+int JetManager::enemySousa() {
+	GameManager *gm = GameManager::getInstance();
+	int enemyCount = 0;
+	for (int s = 0; s < MAX_ENEMY_SUU; s++) {
+		if (!enemy[s])continue;
+		if (enemy[s]->stat == Jet::TAIKI || enemy[s]->stat == Jet::LIVE) {
+			enemyCount++;
+			//敵すぽーん
+			if (enemy[s]->stat == Jet::TAIKI&& gm->scene_play->playTimer >= enemy[s]->spawnTimer) {
+				enemy[s]->stat = Jet::LIVE;
+			}
+		}
+
+		if (enemy[s]->stat == Jet::LIVE) {
+			//敵の弾作る。
+			if (enemy[s]->AttackSpeed <= enemy[s]->atkTimer) {
+				switch (enemy[s]->shotType)
+				{
+				case 0:
+					enemy[s]->shotGen(EnemyJet::MISSILE1, true, player->circle.pos.x, player->circle.pos.y);
+					break;
+				case 1:
+					enemy[s]->shotGen(EnemyJet::RICE, false, enemy[s]->circle.pos.x + cos(enemy[s]->angle - 0.2f), enemy[s]->circle.pos.y + sin(enemy[s]->angle - 0.2f));
+					enemy[s]->shotGen(EnemyJet::RICE, false, enemy[s]->circle.pos.x + cos(enemy[s]->angle), enemy[s]->circle.pos.y + sin(enemy[s]->angle));
+					enemy[s]->shotGen(EnemyJet::RICE, false, enemy[s]->circle.pos.x + cos(enemy[s]->angle + 0.2f), enemy[s]->circle.pos.y + sin(enemy[s]->angle + 0.2f));
+					break;
+				case 2:
+					enemy[s]->shotGen(EnemyJet::KI,false, player->circle.pos.x, player->circle.pos.y);
+
+					break;
+				case 3:
+					for (int i = 0; i < 8;i++) {
+						enemy[s]->shotGen(EnemyJet::RICE, false, enemy[s]->circle.pos.x + cos(enemy[s]->angle+MY_PI/4*i), enemy[s]->circle.pos.y + sin(enemy[s]->angle + MY_PI / 4 * i));
+					}
+					break;
+				default:
+					break;
+				}
+				enemy[s]->atkTimer = 0;
+			}
+			/*if (jm->enemy[s]->deathTimer&& jm->enemy[s]->Timer >= jm->enemy[s]->deathTimer) {
+			SAFE_DELETE(jm->enemy[s]);
+			}*/
+
+			enemy[s]->eneMove();
+			enemy[s]->drawJet();
+			if (hitHantei(enemy[s], player)) {
+				player->health--;
+			}
+		}
+	}
+	return enemyCount;
+}
+void JetManager::genStage0() {
+	float randtime = (float)(GetRand(19)+1)/5;
+	for (int i = 0; i < MAX_ENEMY_SUU; i++) {
+		enemy[i] = genEnemy(GetRand(1),i+randtime);
+	}
+}
+void JetManager::genStage1() {
+	float randtime = (float)(GetRand(19) + 1) / 5;
+	for (int i = 0; i < MAX_ENEMY_SUU; i++) {
+		enemy[i] = genEnemy(GetRand(2), i + randtime);
+	}
+}
+void JetManager::genStage2() {
+	float randtime = (float)(GetRand(19) + 1) / 5;
+	for (int i = 0; i < MAX_ENEMY_SUU; i++) {
+		enemy[i] = genEnemy(GetRand(3), i + randtime);
+	}
+}
+void JetManager::genStage3() {
+	float randtime = (float)(GetRand(19) + 1) / 5;
+	for (int i = 0; i < MAX_ENEMY_SUU; i++) {
+		if (i == MAX_ENEMY_SUU - 1) {
+			enemy[i] = genEnemy(4,i);
+			break;
+		}
+		enemy[i] = genEnemy(GetRand(3), i + randtime);
+	}
+}
+EnemyJet* JetManager::genEnemy(int ty,float times) {
+	GameManager* gm = GameManager::getInstance();
+	EnemyJet *ene;
+	int rand = GetRand(2) + 1;
+	switch (ty)
+	{
+		
+	case 0:
+		ene = new EnemyJet(gm->battleWidth - 50 * rand, GetRand(gm->battleHeight-100)+80, 0, 64, GetRand(5) + 1, 10.0f, 1.8f, gfx[JetManager::ENEMY_JET_TYPE1], 1, 0,times,times+10.0f);
+		ene->addHoudai(0, 0, 0,gfx[JetManager::ENEMY_HOUDAI], 40.0f / (float)getGraphYsize(gfx[JetManager::ENEMY_HOUDAI]), MY_PI);
+		break;
+	case 1:
+		ene = new EnemyJet(gm->battleWidth -50*rand , gm->battleHeight, 0, 64, GetRand(5) + 1, 15.0f, 2.5f, gfx[JetManager::ENEMY_JET_TYPE3], 3, 2, times, times + 10.0f);
+		break;
+	case 2:
+		ene = new EnemyJet(gm->battleWidth - 50 * rand, GetRand(gm->battleHeight - 100) + 80, 0, 30, GetRand(5) + 1, 8.0f, 1.2f, gfx[JetManager::ENEMY_JET_TYPE4], 1, 1, times, times + 10.0f);
+		break;
+	case 3:
+		ene = new EnemyJet(gm->battleWidth - 50 * rand, GetRand(gm->battleHeight - 100) + 80, 0, 25, GetRand(5) + 1, 4.0f, 1.5f, gfx[JetManager::ENEMY_JET_TYPE5], 1, 1, times, times + 10.0f);
+		break;
+	case 4:
+		ene = new EnemyJet(gm->battleWidth/2, GetRand(gm->battleHeight),0, 450,GetRand(5) + 1, 255.0f, 0.5f, gfx[JetManager::ENEMY_JET_TYPE2],4,3, times, times + 9999.0f);
+		break;
+	default:
+		break;
+	}
+	return ene;
 }
 void JetManager::Ultimate(t2k::vec3 pos, int num) {
 	ultpos = pos;

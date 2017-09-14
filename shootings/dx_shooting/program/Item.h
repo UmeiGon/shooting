@@ -8,4 +8,5 @@ public:
 	int runeType;
 	float runekouka;
 	void ItemUpdate();
+	static int itemhaisyutu();
 };

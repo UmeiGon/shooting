@@ -7,24 +7,37 @@ void EnemyJet::eneMove() {
 	bool spined = false;
 	if (gm->debug->showDebug) {
 		gm->drawBar(circle.pos.x - circle.r, circle.pos.y - circle.r, circle.r * 2, circle.r / 2, health, maxhealth, GetColor(0, 255, 0), GetColor(255, 0, 0));
-
 	}
 	switch (moveType)
 	{
-	case 0:
-		//pos = t2k::vec3(x0 + r*cos(Timer * 5), y0 + r*sin(Timer * 5), 0);
+	case MAWARU:
+		move = t2k::vec3(x0 + circle.r*cos(liveTimer * 5), y0 + circle.r*sin(liveTimer * 5), 0)-circle.pos;
+		x0 += gm->debug->dTime*5;
 		break;
-	case 1:
+	case SPIN:
 		move = t2k::vec3(-speed, -speed / 2, 0);
 		angle += gm->debug->dTime;
 		spined = true;
+		break;
+	case NAMI:
+		move =t2k::vec3(-100.0f, 100*cos(liveTimer*3),0)*gm->debug->dTime;
+		break;
+	case YOKO:
+		move = t2k::vec3(-150.0f,0,0)*gm->debug->dTime;
+		if (circle.pos.y > gm->battleHeight) {
+			move.y = 100.0f*gm->debug->dTime;
+		}
+		break;
+	case HUYUU:
+		 circle.pos=t2k::vec3((gm->winWidth/2)+(gm->winWidth/2)*sin(liveTimer), 550, 0);
+		 return;
 		break;
 	default:
 		break;
 	}
 	JetManager* jm = JetManager::getInstance();
 	
-	if (jm->ultActive == PlayerJet::ULT_HOLE) {
+	if (jm->ultActive == PlayerJet::ULT_HOLE&&stat==LIVE) {
 		move = jm->ultpos - circle.pos;
 		move = t2k::vec3Normalize(move);
 		move * 400 * gm->debug->dTime;
@@ -32,13 +45,13 @@ void EnemyJet::eneMove() {
 	circle.pos += move;
 	if (capsule) {
 		capTuizyu(move, spined);
-		//‰ñ“]ƒeƒXƒg
 	}
 
 };
-EnemyJet::EnemyJet(float X, float Y, float Angle, float Size, float Spd, float Health, float As, int gfx, float sT, float dT) :Jet(X, Y, Angle, Size, Spd, Health, As, gfx, dT) {
+EnemyJet::EnemyJet(float X, float Y, float Angle, float Size, float Spd, float Health, float As, int gfx,int movet,int shott ,float sT, float dT) :Jet(X, Y, Angle, Size, Spd, Health, As, gfx, dT) {
 	x0 = X;
 	y0 = Y;
+	shotType = shott;
 	spawnTimer = sT;
-	moveType = NANAME;
+	moveType = movet;
 }

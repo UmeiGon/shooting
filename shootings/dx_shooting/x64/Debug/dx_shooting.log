@@ -1,4 +1,29 @@
-﻿  menuScene.cpp
+﻿  playScene.cpp
 d:\gittest\shooting\shootings\dx_shooting\program\vec3.h(167): warning C4305: '初期化中': 'double' から 'float' へ切り詰めます。
+d:\gittest\shooting\shootings\dx_shooting\program\scene\playscene.cpp(25): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
+d:\gittest\shooting\shootings\dx_shooting\program\scene\playscene.cpp(26): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
+d:\gittest\shooting\shootings\dx_shooting\program\scene\playscene.cpp(27): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
+d:\gittest\shooting\shootings\dx_shooting\program\scene\playscene.cpp(28): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
+d:\gittest\shooting\shootings\dx_shooting\program\scene\playscene.cpp(71): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
+d:\gittest\shooting\shootings\dx_shooting\program\scene\playscene.cpp(146): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
+  playerJet.cpp
+d:\gittest\shooting\shootings\dx_shooting\program\vec3.h(167): warning C4305: '初期化中': 'double' から 'float' へ切り詰めます。
+d:\gittest\shooting\shootings\dx_shooting\program\playerjet.cpp(51): warning C4552: '+': 演算子にプログラム上の作用がありません。作用を伴う演算子を使用してください
+d:\gittest\shooting\shootings\dx_shooting\program\playerjet.cpp(128): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
+d:\gittest\shooting\shootings\dx_shooting\program\playerjet.cpp(129): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
+d:\gittest\shooting\shootings\dx_shooting\program\playerjet.cpp(167): warning C4244: '引数': 'int' から 'const float' への変換です。データが失われる可能性があります。
+d:\gittest\shooting\shootings\dx_shooting\program\playerjet.cpp(172): warning C4244: '初期化中': 'float' から 'int' への変換です。データが失われる可能性があります。
+d:\gittest\shooting\shootings\dx_shooting\program\playerjet.cpp(200): warning C4552: '*': 演算子にプログラム上の作用がありません。作用を伴う演算子を使用してください
+d:\gittest\shooting\shootings\dx_shooting\program\playerjet.cpp(202): warning C4552: '*': 演算子にプログラム上の作用がありません。作用を伴う演算子を使用してください
+d:\gittest\shooting\shootings\dx_shooting\program\playerjet.cpp(216): warning C4244: '引数': 'int' から 'const float' への変換です。データが失われる可能性があります。
+d:\gittest\shooting\shootings\dx_shooting\program\playerjet.cpp(250): warning C4244: '引数': 'int' から 'const float' への変換です。データが失われる可能性があります。
+d:\gittest\shooting\shootings\dx_shooting\program\playerjet.cpp(379): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
+d:\gittest\shooting\shootings\dx_shooting\program\playerjet.cpp(399): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
+d:\gittest\shooting\shootings\dx_shooting\program\playerjet.cpp(399): warning C4244: '引数': 'int' から 'float' への変換です。データが失われる可能性があります。
+d:\gittest\shooting\shootings\dx_shooting\program\playerjet.cpp(406): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
+d:\gittest\shooting\shootings\dx_shooting\program\playerjet.cpp(406): warning C4244: '引数': 'int' から 'float' への変換です。データが失われる可能性があります。
+d:\gittest\shooting\shootings\dx_shooting\program\playerjet.cpp(431): warning C4244: '引数': 'int' から 'const float' への変換です。データが失われる可能性があります。
+d:\gittest\shooting\shootings\dx_shooting\program\playerjet.cpp(440): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
+  コードを生成中...
   dx_shooting.vcxproj -> D:\gittest\shooting\shootings\dx_shooting\x64\Debug\dx_shooting.exe
   dx_shooting.vcxproj -> D:\gittest\shooting\shootings\dx_shooting\x64\Debug\dx_shooting.pdb (Partial PDB)

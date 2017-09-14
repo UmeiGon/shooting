@@ -12,13 +12,27 @@
 playscene::playscene() {
 	jm = JetManager::getInstance();
 	playTimer = 0;
+	mountx = 0;
 }
 int playscene::update() {
 	GameManager* gm = GameManager::getInstance();
 	JetManager* jm = JetManager::getInstance();
-	DrawModiGraph(0, 0, gm->battleWidth, 0, gm->battleWidth, gm->battleHeight, 0, gm->battleHeight, gm->backImg[GameManager::CLOUD1_B], false);
+
+	DrawModiGraph(0, 0, gm->battleWidth, 0, gm->battleWidth, gm->battleHeight, 0, gm->battleHeight, gm->backImg[GameManager::CLOUD2_B], false);
 	playTimer += gm->debug->dTime;
 	DrawFormatString(0, 900, 0xffffff, "%f", playTimer);
+	mountx += gm->debug->dTime * 15;
+	DrawRotaGraph(2804 - mountx, gm->winHeight - 210, 1.5f, 0, gm->backImg[GameManager::MOUTAINS], true);
+	DrawRotaGraph(2036 - mountx, gm->winHeight - 210, 1.5f, 0, gm->backImg[GameManager::MOUTAINS], true);
+	DrawRotaGraph(1268-mountx, gm->winHeight - 210, 1.5f, 0, gm->backImg[GameManager::MOUTAINS], true);
+	DrawRotaGraph(500-mountx,gm->winHeight-210,1.5f,0, gm->backImg[GameManager::MOUTAINS], true);
+	if (mountx >= 768)mountx = 0;
+	for (int i = 0; i < 2; i++) {
+
+
+		DrawModiGraph(1024 * i, gm->winHeight - 220, 1024 * (i + 1), gm->winHeight - 220, 1024 * (i + 1), gm->winHeight, 1024 * i, gm->winHeight, gm->backImg[GameManager::GROUND], true);
+	}
+
 	jm->player->update();
 
 
@@ -33,30 +47,29 @@ int playscene::update() {
 	//	jm->player->nowShot[PlayerJet::SUB] = PlayerJet::SUB_BOOMERANG;
 	//}
 
-	jm->shotIconDraw(100, 50, PlayerJet::MAIN, jm->player->nowShot[PlayerJet::MAIN], 50);
-	jm->shotIconDraw(100, 100, PlayerJet::SUB, jm->player->nowShot[PlayerJet::SUB], 50);
-	jm->shotIconDraw(100, 150, PlayerJet::ULT, jm->player->nowShot[PlayerJet::ULT], 50);
+
 
 	//敵描画
 	int enemyCount = 0;
 	t2k::vec3 move(800, 300, 0);
-	//アイテム描画
+	//アイテム描画と判定
 	for (int i = 0; i < jm->MAX_ITEM_SUU; i++) {
 		if (jm->item[i]) {
 			jm->item[i]->ItemUpdate();
 			if (jm->item[i]->circle.pos.x < 0 || jm->hitHantei(jm->item[i], jm->player)) {
 				switch (jm->item[i]->tag)
 				{
-				case 0:
+				case Item::IRON:
 					jm->player->ironsuu++;
 					break;
-				case 1:
+				case Item::ENERGY:
 					jm->player->energyPoint++;
 					break;
-				case 2:
-					for (int k = 0;k<PlayerJet::MAX_RUNE_SUU; k++) {
+				case Item::RUNE:
+					for (int k = 0; k < PlayerJet::MAX_RUNE_SUU; k++) {
 						if (!jm->player->runes[k]) {
-							jm->player->runes[k] = new Rune(jm->item[i]->runeType,jm->item[i]->runekouka);
+							jm->player->runes[k] = new Rune(jm->item[i]->runeType, jm->item[i]->runekouka);
+							break;
 						}
 					}
 					break;
@@ -68,35 +81,8 @@ int playscene::update() {
 		}
 
 	}
-	for (int s = 0; s < JetManager::MAX_ENEMY_SUU; s++) {
-		if (!jm->enemy[s])continue;
-		if (jm->enemy[s]->stat == Jet::TAIKI || jm->enemy[s]->stat == Jet::LIVE) {
-			enemyCount++;
-			//敵すぽーん
-			if (jm->enemy[s]->stat == Jet::TAIKI&&playTimer >= jm->enemy[s]->spawnTimer) {
-				jm->enemy[s]->stat = Jet::LIVE;
-			}
-		}
-
-		if (jm->enemy[s]->stat == Jet::LIVE) {
-			//敵の弾作る。
-			if (jm->enemy[s]->AttackSpeed <= jm->enemy[s]->atkTimer) {
-				jm->enemy[s]->shotGen(EnemyJet::FIRE, true, jm->player->circle.pos.x, jm->player->circle.pos.y);
-				jm->enemy[s]->atkTimer = 0;
-			}
-			/*if (jm->enemy[s]->deathTimer&& jm->enemy[s]->Timer >= jm->enemy[s]->deathTimer) {
-				SAFE_DELETE(jm->enemy[s]);
-			}*/
-
-			jm->enemy[s]->eneMove();
-			jm->enemy[s]->drawJet();
-			if (jm->hitHantei(jm->enemy[s], jm->player)) {
-				jm->player->health--;
-			}
-		}
-
-	}
-
+	
+	enemyCount = jm->enemySousa();
 
 
 
@@ -127,7 +113,7 @@ int playscene::update() {
 				jm->enemy[i]->stat = Jet::DEAD;
 				for (int k = 0; k < jm->MAX_ITEM_SUU; k++) {
 					if (!jm->item[k]) {
-						jm->item[k] = new Item(jm->enemy[i]->circle.pos.x, jm->enemy[i]->circle.pos.y, 30.0f, GetRand(2), 1.5f);
+						jm->item[k] = new Item(jm->enemy[i]->circle.pos.x, jm->enemy[i]->circle.pos.y, 30.0f, Item::itemhaisyutu(), 1.5f);
 						break;
 					}
 				}
@@ -144,7 +130,33 @@ int playscene::update() {
 	}
 	jm->clearTarget();
 	//プレイヤーをターゲットから開放
-	if (!enemyCount)return VICTORY;
+	if (!enemyCount) {
+		for (int i = 0; i < JetManager::MAX_ITEM_SUU; i++) {
+			if (jm->item[i]) {
+				switch (jm->item[i]->tag)
+				{
+				case Item::IRON:
+					jm->player->ironsuu++;
+					break;
+				case Item::ENERGY:
+					break;
+				case Item::RUNE:
+					for (int k = 0; k < PlayerJet::MAX_RUNE_SUU; k++) {
+						if (!jm->player->runes[k]) {
+							jm->player->runes[k] = new Rune(jm->item[i]->runeType, jm->item[i]->runekouka);
+
+							break;
+						}
+					}
+					break;
+				default:
+					break;
+				}
+				SAFE_DELETE(jm->item[i]);
+			}
+		}
+		return VICTORY;
+	}
 	if (jm->player->health <= 0) {
 		return DEFEAT;
 		//GAMEOVER処理

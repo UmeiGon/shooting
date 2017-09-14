@@ -26,12 +26,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		switch (gm->gameScene)
 		{
 		case GameManager::init:
-			gm->gameScene = GameManager::title;
+			gm->titleInit();
 			break;
 		case GameManager::title:
 			if (gm->scene_title->update()) {
-				SAFE_DELETE(gm->scene_title);
-				gm->playInit();
+				gm->titleEnd();
+				gm->menuInit();
 			}
 			break;
 		case GameManager::play:
@@ -52,14 +52,13 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		case GameManager::result:
 			switch (gm->scene_result->update())
 			{
-
 			case resultscene::GO_MENU:
 				gm->resultEnd();
 				gm->menuInit();
 				break;
 			case resultscene::GO_PLAY:
 				gm->resultEnd();
-				gm->playInit();
+				gm->playInit(gm->nowStage);
 				break;
 			case resultscene::NONE:
 				break;
@@ -70,7 +69,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		case GameManager::menu:
 			if (gm->scene_menu->update()) {
 				gm->menuEnd();
-				gm->playInit();
+				gm->playInit(gm->nowStage);
 			}
 			break;
 		default:

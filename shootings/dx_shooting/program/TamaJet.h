@@ -61,7 +61,7 @@ public:
 
 class shotd {
 public:
-	shotd(float Siz, float Spd, float Atk, float Cd, float Heat, int Gfx, float dt = -1,float kantuteikati=-1);
+	shotd(float Siz, float Spd, float Atk, float Cd, float Heat, int Gfx,int Iron, float dt = -1,float kantuteikati=-1);
 	float size;
 	float speed;
 	float atk;
@@ -69,6 +69,7 @@ public:
 	float shotHeat;
 	float kantuTeika;
 	int gfx;
+	int hituIron;
 	float deathTime;
 };
 class Jet :public Tama {
@@ -76,7 +77,7 @@ public:
 	float atkTimer = 0;
 	int handle2;
 	float AttackSpeed = 1;
-	enum StandardShotTypes { FIRE, BEAM, MISSILE1, MISSILE2 };
+	enum StandardShotTypes { FIRE, BEAM, MISSILE1, MISSILE2 ,KI,RICE};
 	houData *houdai;
 	//生きていたらlive、スポーン前はtaiki、ライフ0で弾が画面にある場合dead、その後弾が無くなったらsyoukyo
 	enum zyoutai { TAIKI, LIVE, DEAD, SYOUKYO };
